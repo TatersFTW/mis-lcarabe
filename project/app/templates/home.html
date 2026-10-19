@@ -1,0 +1,60 @@
+{% load static %}
+{% comment %} =============================================================================
+   FILE: app/templates/home.html
+   -----------------------------------------------------------------------------
+   PURPOSE:  The public landing page for the real-estate site.
+   ROLE:     Standalone page (does NOT extend base.html). It includes the shared
+             header, a property search box, a partnerships strip, and the footer.
+   USED BY:  The 'home' view (URL name 'home'). Receives 'properties',
+             'partners' and 'property_types' from views.home().
+   INCLUDES: components/header.html, components/property_search.html,
+             components/partnerships.html, components/footer.html.
+   ============================================================================= {% endcomment %}
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L. C. Arabe Realty | Find Your Home</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <!-- Example CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=detail-20261019-1">
+    <link rel="stylesheet" href="{% static 'css/partnerships.css' %}?v=home-20261019-2">
+</head>
+<body>
+
+    <!-- Header -->
+    {% include 'components/header.html' %}
+
+    <main id="home-page">
+        <section class="home-intro" aria-labelledby="home-title">
+            <div class="home-intro-inner">
+                <p class="home-eyebrow">L. C. Arabe Realty · Since 2018</p>
+                <h1 id="home-title">Find a place to call home.</h1>
+                <p class="home-intro-copy">Explore homes and properties in Cavite and nearby communities.</p>
+                <a class="home-browse-link" href="{% url 'search_properties' %}">Browse all properties <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+            </div>
+        </section>
+
+        {# --- Search Section: the property filter/search box (see components/property_search.html) --- #}
+        <section id="search" class="home-search">
+            {% include 'components/property_search.html' %}
+        </section>
+
+        <!-- Partnership Section: strip of partner logos (see components/partnerships.html) -->
+        <section id="partnership" class="home-partnership">
+            {% include 'components/partnerships.html' %}
+        </section>
+    </main>
+
+    <!-- Footer -->
+    {% include 'components/footer.html' %}
+
+    <!-- Example JS -->
+    <script src="{% static 'js/script.js' %}"></script>
+</body>
+</html>

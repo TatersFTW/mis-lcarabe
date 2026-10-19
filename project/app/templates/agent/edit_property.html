@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% comment %} =============================================================================
+   FILE: app/templates/agent/edit_property.html
+   -----------------------------------------------------------------------------
+   PURPOSE:  The form an agent uses to edit one of their existing listings.
+   ROLE:     Extends base.html. Like add_property it can upload images, and it also
+             lists the current gallery images with a "Delete" checkbox each (the
+             'delete_images' values are processed by the edit_property view).
+   USED BY:  The 'edit_property' view (URL name 'edit_property').
+   INCLUDES: agent/property_form_fields.html.
+   ============================================================================= {% endcomment %}
+
+{% block title %}Edit Property{% endblock %}
+
+{% block content %}
+<section class="form-container">
+   <form method="post" enctype="multipart/form-data" class="add-property-form">
+      {% csrf_token %}
+      <h3>Edit Property</h3>
+      {% include 'agent/property_form_fields.html' %}
+
+      {% if property.images.all %}
+         <div class="form-section">
+            <h4>Existing Gallery Images</h4>
+            <div class="preview-grid">
+               {% for img in property.images.all %}
+                  <label class="preview-tile">
+                     <img src="{{ img.image.url }}" alt="Property image">
+                     <span><input type="checkbox" name="delete_images" value="{{ img.id }}"> Delete</span>
+                  </label>
+               {% endfor %}
+            </div>
+         </div>
+      {% endif %}
+
+      <button type="submit" class="btn">Save Changes</button>
+      <p><a href="{% url 'agent_dashboard' %}">Back to Dashboard</a></p>
+   </form>
+</section>
+{% endblock %}

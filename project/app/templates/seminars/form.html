@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% comment %} =============================================================================
+   FILE: app/templates/seminars/form.html
+   -----------------------------------------------------------------------------
+   PURPOSE:  The create/edit form for a seminar.
+   ROLE:     Extends base.html. Uses enctype="multipart/form-data" so an attachment
+             file can be uploaded. Renders every SeminarForm field. The page title
+             comes from the view's 'title' variable.
+   USED BY:  SeminarCreateView and SeminarUpdateView.
+   ============================================================================= {% endcomment %}
+
+{% block title %}{{ title|default:'Seminar' }}{% endblock %}
+
+{% block content %}
+<section class="form-container">
+   <form method="post" enctype="multipart/form-data" class="add-property-form">
+      {% csrf_token %}
+      <h3>{{ title|default:'Seminar' }}</h3>
+      {% for field in form %}
+         <p>{{ field.label_tag }}{{ field }}{{ field.errors }}</p>
+      {% endfor %}
+      <button class="btn" type="submit">Save Seminar</button>
+      <p><a href="{% url 'seminar_list' %}">Back to Seminars</a></p>
+   </form>
+</section>
+{% endblock %}

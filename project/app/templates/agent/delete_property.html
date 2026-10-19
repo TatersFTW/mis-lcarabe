@@ -1,0 +1,20 @@
+{% comment %} =============================================================================
+   FILE: app/templates/agent/delete_property.html
+   -----------------------------------------------------------------------------
+   PURPOSE:  Confirmation page shown before an agent removes a listing.
+   ROLE:     Standalone (does not extend base.html). Asks "are you sure?" and POSTs
+             to the delete URL; the view performs a soft delete on confirm.
+   USED BY:  The 'delete_property' view (URL name 'delete_property'). Expects
+             'property'.
+   ============================================================================= {% endcomment %}
+
+{% load static %}
+<h1>Delete Property</h1>
+
+<p>Are you sure you want to delete "{{ property.title }}"?</p>
+
+<form method="POST">
+    {% csrf_token %}
+    <button type="submit" class="delete-btn">Yes, Delete</button>
+    <a href="{% url 'agent_dashboard' %}" class="btn">Cancel</a>
+</form>

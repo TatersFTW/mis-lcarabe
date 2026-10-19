@@ -1,0 +1,30 @@
+{% comment %} =============================================================================
+   FILE: app/templates/components/partnerships.html
+   -----------------------------------------------------------------------------
+   PURPOSE:  The "Partnerships" section: a titled strip of partner company logos.
+   ROLE:     Loops over the 'partners' list and renders each logo as a link to the
+             partner's website (opens in a new tab). Shows a fallback message when
+             there are no partners.
+   USED BY:  home.html and partnership.html. Expects 'partners' from the view.
+   ============================================================================= {% endcomment %}
+
+<div class="partnerships-section">
+    <h1>PARTNERSHIPS</h1>
+    <p class="subtitle">
+        As of now we have multiple partnerships since our 2018. Here are the companies that we are working with.
+    </p>
+
+    <div class="partners-container">
+        {% for partner in partners %}
+        <div class="partner">
+            <a href="{{ partner.website }}" target="_blank" rel="noopener noreferrer">
+                {% if partner.logo %}
+                    <img src="{{ partner.logo.url }}" alt="{{ partner.name }}">
+                {% endif %}
+            </a>
+        </div>
+        {% empty %}
+        <p>No partners found</p>
+        {% endfor %}
+    </div>
+</div>

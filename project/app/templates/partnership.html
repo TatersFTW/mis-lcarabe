@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+{% comment %} =============================================================================
+   FILE: app/templates/partnership.html
+   -----------------------------------------------------------------------------
+   PURPOSE:  A full page dedicated to the Partnerships section.
+   ROLE:     Extends base.html; loads the partnerships stylesheet in extra_css and
+             drops in the shared partnerships component.
+   USED BY:  The 'partnerships' view (URL name 'partnerships').
+   INCLUDES: components/partnerships.html.
+   ============================================================================= {% endcomment %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/partnerships.css' %}">
+{% endblock %}
+
+{% block content %}
+{% include 'components/partnerships.html' %}
+{% endblock %}

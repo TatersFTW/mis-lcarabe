@@ -1,0 +1,229 @@
+/* Agent directory page styles. Colors reuse the site's existing green and
+   neutral palette from style.css. */
+.agent-directory{
+   min-height: calc(100vh - 16.6rem);
+   max-width: 1200px;
+   margin: 0 auto;
+   padding: 5.6rem 2rem 7rem;
+}
+
+.agent-directory-intro{
+   padding: 0 0 3.2rem;
+   text-align: center;
+}
+
+.agent-directory-eyebrow{
+   margin-bottom: .7rem;
+   color: var(--main-color);
+   font-size: 1.3rem;
+   font-weight: 700;
+   letter-spacing: .12em;
+   text-transform: uppercase;
+}
+
+.agent-directory-intro h1{
+   color: var(--black);
+   font-size: clamp(3rem, 4vw, 4.2rem);
+   line-height: 1.15;
+}
+
+.agent-directory-intro > p:last-child{
+   max-width: 58rem;
+   margin: 1.2rem auto 0;
+   color: var(--light-color);
+   font-size: 1.6rem;
+   line-height: 1.6;
+}
+
+.agent-card-grid{
+   display: grid;
+   grid-template-columns: repeat(auto-fit, minmax(min(100%, 32rem), 36rem));
+   justify-content: center;
+   align-items: stretch;
+   gap: 2.4rem;
+   padding: 0;
+}
+
+.agent-card{
+   display: flex;
+   flex-direction: column;
+   min-width: 0;
+   padding: 2.8rem;
+   border: .1rem solid #e2e7e2;
+   border-top: .4rem solid var(--main-color);
+   border-radius: 1.2rem;
+   background: var(--white);
+   box-shadow: 0 .8rem 2.4rem rgba(0, 0, 0, .08);
+   transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.agent-card:hover{
+   transform: translateY(-.4rem);
+   box-shadow: 0 1.2rem 3rem rgba(0, 0, 0, .12);
+}
+
+.agent-card-profile{
+   display: flex;
+   align-items: center;
+   gap: 1.4rem;
+   margin-bottom: 1.8rem;
+}
+
+.agent-icon{
+   display: grid;
+   width: 6.4rem;
+   height: 6.4rem;
+   flex: 0 0 6.4rem;
+   place-items: center;
+   border-radius: 50%;
+   background: #e8f0e8;
+   color: var(--main-color);
+   font-size: 2.6rem;
+}
+
+.agent-role{
+   color: var(--light-color);
+   font-size: 1.4rem;
+   font-weight: 600;
+}
+
+.agent-name{
+   overflow-wrap: anywhere;
+   margin-bottom: 1.6rem;
+   color: var(--black);
+   font-size: 2.1rem;
+   line-height: 1.35;
+}
+
+.agent-contact-details{
+   display: grid;
+   gap: 1.1rem;
+   padding: 1.5rem 0;
+   border-top: .1rem solid #e8e8e8;
+   border-bottom: .1rem solid #e8e8e8;
+}
+
+.agent-contact-details p{
+   display: flex;
+   align-items: flex-start;
+   gap: 1rem;
+   min-width: 0;
+   color: var(--light-color);
+   font-size: 1.4rem;
+   line-height: 1.5;
+}
+
+.agent-contact-details i{
+   width: 1.6rem;
+   flex: 0 0 1.6rem;
+   padding-top: .2rem;
+   color: var(--main-color);
+}
+
+.agent-contact-details a{
+   overflow-wrap: anywhere;
+   color: var(--black);
+}
+
+.agent-contact-details a:hover{
+   color: var(--main-color);
+   text-decoration: underline;
+   text-underline-offset: .25rem;
+}
+
+.agent-status{
+   display: inline-flex;
+   align-items: center;
+   align-self: flex-start;
+   gap: .7rem;
+   margin-top: 1.5rem;
+   padding: .6rem 1rem;
+   border-radius: 2rem;
+   font-size: 1.2rem;
+   font-weight: 700;
+}
+
+.agent-status.verified{
+   background: #e8f0e8;
+   color: var(--main-color);
+}
+
+.agent-status.not-verified{
+   background: #f4eeee;
+   color: #8b3a32;
+}
+
+.agent-contact-button{
+   display: inline-flex;
+   justify-content: center;
+   align-items: center;
+   gap: .8rem;
+   width: 100%;
+   min-height: 4.6rem;
+   margin-top: 2rem;
+   padding: 1rem 1.4rem;
+   border-radius: .7rem;
+   background: var(--main-color);
+   color: var(--white);
+   font-size: 1.5rem;
+   font-weight: 700;
+   text-align: center;
+   transition: background .2s ease, transform .2s ease;
+}
+
+.agent-contact-button:hover{
+   transform: translateY(-.1rem);
+   background: var(--black);
+   color: var(--white);
+}
+
+.agent-empty-state{
+   grid-column: 1 / -1;
+   justify-self: center;
+   max-width: 52rem;
+   padding: 3.6rem;
+   border: .1rem solid #e2e7e2;
+   border-radius: 1.2rem;
+   background: var(--white);
+   box-shadow: var(--box-shadow);
+   text-align: center;
+}
+
+.agent-empty-state > i{
+   margin-bottom: 1.2rem;
+   color: var(--main-color);
+   font-size: 3rem;
+}
+
+.agent-empty-state h2{
+   color: var(--black);
+   font-size: 2rem;
+}
+
+.agent-empty-state p{
+   margin-top: .8rem;
+   color: var(--light-color);
+   font-size: 1.5rem;
+   line-height: 1.6;
+}
+
+@media (max-width: 600px){
+   .agent-directory{
+      padding: 4rem 1.6rem 5rem;
+   }
+
+   .agent-directory-intro{
+      padding-bottom: 2.4rem;
+   }
+
+   .agent-card{
+      padding: 2.2rem;
+   }
+}
+
+@media (prefers-reduced-motion: reduce){
+   .agent-card,
+   .agent-contact-button{
+      transition: none;
+   }
+}

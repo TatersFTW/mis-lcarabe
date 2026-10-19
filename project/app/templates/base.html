@@ -1,0 +1,41 @@
+{% comment %} =============================================================================
+   FILE: app/templates/base.html
+   -----------------------------------------------------------------------------
+   PURPOSE:  The master page layout. Other templates "extend" this and fill in
+             its blocks, so every page shares the same <head>, header, footer and
+             scripts. This keeps the site consistent and avoids repeating markup.
+   ROLE:     Provides overridable blocks: 'title' (browser tab), 'content' (main
+             body), plus 'extra_css' and 'extra_js' for page-specific assets.
+   USED BY:  Every template that begins with {% extends 'base.html' %}.
+   INCLUDES: components/header.html and components/footer.html.
+   ============================================================================= {% endcomment %}
+
+{% load static %} 
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}L.C. Arabe Realty{% endblock %}</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=detail-20261019-1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+    <!-- HEADER -->
+    {% include 'components/header.html' %}
+
+    <!-- PAGE CONTENT -->
+    {% block content %}
+    {% endblock %}
+
+    <!-- FOOTER -->
+    {% include 'components/footer.html' %}
+
+    <script src="{% static 'js/script.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,102 @@
+{% comment %} =============================================================================
+   FILE: app/templates/contact.html
+   -----------------------------------------------------------------------------
+   PURPOSE:  The "Contact Us" page: a contact form and an FAQ (accordion).
+   ROLE:     Standalone page. The form POSTs to the 'contact' URL. The FAQ boxes
+             expand/collapse via a CSS 'active' class toggled by script.js.
+   USED BY:  The 'contact_view' view (URL name 'contact').
+   NOTE:     The contact form fields are plain HTML; the view only shows a success
+             message and does not store what is submitted (see views.contact_view).
+   ============================================================================= {% endcomment %}
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Contact Us</title>
+
+   <!-- font awesome -->
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+
+   <!-- custom css -->
+   <link rel="stylesheet" href="{% static 'css/style.css' %}?v=detail-20261019-1">
+</head>
+
+<body>
+
+{% include 'components/header.html' %}
+
+<!-- contact section starts -->
+<section class="contact">
+
+   <div class="row">
+      <div class="image">
+         <img src="{% static 'images/contact-img.svg' %}" alt="">
+      </div>
+
+      <!-- Replace 'contact' with your URL name -->
+      <form action="{% url 'contact' %}" method="post">
+         {% csrf_token %}
+
+         <h3>get in touch</h3>
+
+         <input type="text" name="name" required maxlength="50" placeholder="enter your name" class="box">
+
+         <input type="email" name="email" required maxlength="50" placeholder="enter your email" class="box">
+
+         <input type="number" name="number" required maxlength="10" max="9999999999" min="0" placeholder="enter your number" class="box">
+
+         <textarea name="message" placeholder="enter your message" required maxlength="1000" cols="30" rows="10" class="box"></textarea>
+
+         <input type="submit" value="send message" name="send" class="btn">
+      </form>
+   </div>
+
+</section>
+<!-- contact section ends -->
+
+<!-- faq section starts -->
+<section class="faq" id="faq">
+
+   <h1 class="heading">FAQ</h1>
+
+   <div class="box-container">
+
+      <div class="box active">
+         <h3><span>What is the process of buying a property?</span><i class="fas fa-angle-down"></i></h3>
+         <p>Buying a property typically involves determining your budget, getting pre-approved for a loan, searching for properties, making an offer, conducting inspections, and closing the deal with legal documentation.</p>
+      </div>
+
+      <div class="box active">
+         <h3><span>How much should I budget for a down payment?</span><i class="fas fa-angle-down"></i></h3>
+         <p>Most buyers pay between 10% to 20% of the property price as a down payment. However, this can vary depending on the loan type and location.</p>
+      </div>
+
+      <div class="box">
+         <h3><span>What are the additional costs when purchasing a property?</span><i class="fas fa-angle-down"></i></h3>
+         <p>Aside from the property price, you should expect costs like taxes, legal fees, registration fees, insurance, and maintenance expenses.</p>
+      </div>
+
+      <div class="box">
+         <h3><span>How do I know if a property is a good investment?</span><i class="fas fa-angle-down"></i></h3>
+         <p>A good property investment depends on location, market trends, potential rental income, infrastructure development, and long-term value appreciation.</p>
+      </div>
+
+      <div class="box">
+         <h3><span>Can foreigners buy property in the Philippines?</span><i class="fas fa-angle-down"></i></h3>
+         <p>Foreigners can legally own condominium units but cannot own land. They can, however, lease land long-term or invest through corporations with Filipino ownership requirements.</p>
+      </div>
+
+   </div>
+
+</section>
+<!-- faq section ends -->
+
+<!-- custom js -->
+<script src="{% static 'js/script.js' %}"></script>
+
+</body>
+</html>

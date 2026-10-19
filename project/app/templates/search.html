@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+{% comment %} =============================================================================
+   FILE: app/templates/search.html
+   -----------------------------------------------------------------------------
+   PURPOSE:  The property search results page.
+   ROLE:     Extends base.html and includes the shared search bar + results grid,
+             which reads filter values from the query string.
+   USED BY:  The 'search_properties' view (URL name 'search_properties').
+   INCLUDES: components/property_search.html.
+   ============================================================================= {% endcomment %}
+
+{% block title %}Search Properties{% endblock %}
+
+{% block content %}
+<main id="property-search-page">
+{% include 'components/property_search.html' %}
+</main>
+{% endblock %}

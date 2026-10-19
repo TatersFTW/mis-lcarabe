@@ -1,0 +1,70 @@
+{% comment %} =============================================================================
+   FILE: app/templates/agent/agents.html
+   -----------------------------------------------------------------------------
+   PURPOSE:  The public "Our Agents" directory.
+   ROLE:     Standalone page. Loops over the active 'agents' and shows each one's
+             username, email, phone, and a Verified / Not Verified badge.
+   USED BY:  The 'agents' view (URL name 'agents').
+   ============================================================================= {% endcomment %}
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <title>Our Agents</title>
+
+   <link rel="stylesheet" href="{% static 'css/style.css' %}?v=detail-20261019-1">
+   <link rel="stylesheet" href="{% static 'css/agent-directory.css' %}?v=20261019">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+{% include 'components/header.html' %}
+
+<main class="agent-directory">
+   <section class="agent-directory-intro" aria-labelledby="agents-title">
+      <p class="agent-directory-eyebrow">Meet our team</p>
+      <h1 id="agents-title">Our Agents</h1>
+      <p>Connect with a local real estate professional to help with your next move.</p>
+   </section>
+
+   <section class="agent-card-grid" aria-label="Real estate agents">
+
+      {% for agent in agents %}
+      <article class="agent-card">
+         <div class="agent-card-profile">
+            <div class="agent-icon" aria-hidden="true">
+               <i class="fas fa-user-tie"></i>
+            </div>
+            <span class="agent-role">Real Estate Agent</span>
+         </div>
+
+         <h2 class="agent-name">{{ agent.get_full_name|default:agent.username }}</h2>
+         <div class="agent-contact-details">
+            <p><i class="fas fa-envelope" aria-hidden="true"></i><a href="mailto:{{ agent.email }}">{{ agent.email }}</a></p>
+            <p><i class="fas fa-phone" aria-hidden="true"></i><span>{{ agent.phone|default:"Phone not provided" }}</span></p>
+         </div>
+
+         {% if agent.is_verified %}
+            <span class="agent-status verified"><i class="fas fa-circle-check" aria-hidden="true"></i> Verified agent</span>
+         {% else %}
+            <span class="agent-status not-verified"><i class="fas fa-circle-exclamation" aria-hidden="true"></i> Verification pending</span>
+         {% endif %}
+
+         <a href="mailto:{{ agent.email }}" class="agent-contact-button"><i class="fas fa-paper-plane" aria-hidden="true"></i> Contact agent</a>
+      </article>
+      {% empty %}
+         <div class="agent-empty-state">
+            <i class="fas fa-users" aria-hidden="true"></i>
+            <h2>No agents available yet</h2>
+            <p>Please check back soon or contact us for help finding a property.</p>
+            <a href="{% url 'contact' %}" class="agent-contact-button">Contact our team</a>
+         </div>
+      {% endfor %}
+
+   </section>
+</main>
+
+</body>
+</html>

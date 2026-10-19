@@ -1,0 +1,93 @@
+{% comment %} =============================================================================
+   FILE: app/templates/components/property_search.html
+   -----------------------------------------------------------------------------
+   PURPOSE:  The property search/filter bar AND the grid of matching results.
+   ROLE:     Top part is a GET form that submits to the 'search_properties' URL;
+             the chosen filters become query-string parameters. The bottom part
+             loops over 'properties' and renders a card for each (or an empty
+             message when nothing matches).
+   USED BY:  home.html (search bar only is typical) and search.html. Expects
+             'properties' and 'property_types' from the view.
+   NOTE:     Filter values are echoed back with {{ request.GET.* }} so the form
+             keeps the user's selections after submitting.
+   ============================================================================= {% endcomment %}
+
+{% load static %}
+
+<section class="search-bar">
+   {# GET form: filter values travel in the URL so results are shareable/bookmarkable. #}
+   <form method="get" action="{% url 'search_properties' %}" class="search-form">
+      <div class="field location-field">
+         <label>Location</label>
+         <div class="search-input">
+            <input type="text" name="city" placeholder="City or project name" value="{{ request.GET.city }}">
+            <i class="fas fa-search"></i>
+         </div>
+      </div>
+      <div class="field">
+         <label>Property Type</label>
+         <select name="property_type">
+            <option value="">Any</option>
+            {% for value,label in property_types %}
+               <option value="{{ value }}" {% if request.GET.property_type == value %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+         </select>
+      </div>
+      <div class="field price-field">
+         <label>Price Range</label>
+         <div class="price-inputs">
+            <input type="number" name="min_price" placeholder="Min" value="{{ request.GET.min_price }}">
+            <input type="number" name="max_price" placeholder="Max" value="{{ request.GET.max_price }}">
+         </div>
+      </div>
+      <div class="field"><label>Bedrooms</label><input type="number" name="bedrooms" min="0" value="{{ request.GET.bedrooms }}"></div>
+      <div class="field"><label>Bathrooms</label><input type="number" name="bathrooms" min="0" value="{{ request.GET.bathrooms }}"></div>
+      <div class="field"><label>Lot Area</label><input type="number" name="lot_area" min="0" value="{{ request.GET.lot_area }}"></div>
+      <div class="field"><label>Floor Area</label><input type="number" name="floor_area" min="0" value="{{ request.GET.floor_area }}"></div>
+      <div class="field">
+         <label>Status</label>
+         <select name="listing_status">
+            <option value="">Any</option>
+            <option value="sale" {% if request.GET.listing_status == 'sale' %}selected{% endif %}>For Sale</option>
+            <option value="reserved" {% if request.GET.listing_status == 'reserved' %}selected{% endif %}>Reserved</option>
+            <option value="sold" {% if request.GET.listing_status == 'sold' %}selected{% endif %}>Sold</option>
+         </select>
+      </div>
+      <div class="field icon-field"><button type="submit">Search properties</button></div>
+   </form>
+</section>
+
+<section class="search-page">
+   <div class="search-results">
+      <h1 class="heading">Properties</h1>
+      <div class="property-grid">
+         {% for property in properties %}
+            {# One card per matching property; {% empty %} shows when there are none. #}
+            <article class="property-card">
+               <div class="image-wrapper">
+                  {% if property.image %}
+                     <img src="{{ property.image.url }}" alt="{{ property.title }}">
+                  {% elif property.images.first %}
+                     <img src="{{ property.images.first.image.url }}" alt="{{ property.title }}">
+                  {% else %}
+                     <img src="{% static 'images/house-img-1.webp' %}" alt="Property">
+                  {% endif %}
+               </div>
+               <div class="content">
+                  <h3>PHP {{ property.price|floatformat:2 }}</h3>
+                  <p class="title">{{ property.title }}</p>
+                  <p class="details">{{ property.city }}, {{ property.province }}</p>
+                  <p class="details">{{ property.floor_area }} sqm floor | {{ property.lot_area }} sqm lot</p>
+                  <p class="details">{{ property.bedrooms }} Beds | {{ property.bathrooms }} Baths | {{ property.parking_spaces }} Parking</p>
+                  <div class="card-footer">
+                     <a href="{% url 'property_detail' property.id %}" class="view-btn">View Details</a>
+                     <span class="status">{{ property.status_label }}</span>
+                  </div>
+               </div>
+            </article>
+         {% empty %}
+            <p class="empty-state">No properties match your filters.</p>
+         {% endfor %}
+      </div>
+   </div>
+</section>

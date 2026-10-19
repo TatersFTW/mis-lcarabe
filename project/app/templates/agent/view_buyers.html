@@ -1,0 +1,47 @@
+{% comment %} =============================================================================
+   FILE: app/templates/agent/view_buyers.html
+   -----------------------------------------------------------------------------
+   PURPOSE:  Lets an agent see the list of registered buyers.
+   ROLE:     Standalone page. Loops over 'buyers' and shows each buyer's details,
+             plus a logout button.
+   USED BY:  The 'ViewBuyersView' view (URL name 'view_buyers').
+   NOTE:     It reads {{ buyer.name }}, but the CustomUser model stores the name in
+             'first_name'/'last_name' (there is no 'name' field), so the Name line
+             will render empty for every buyer. See the final report.
+   ============================================================================= {% endcomment %}
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View Buyers</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=detail-20261019-1">
+</head>
+<body>
+
+<header>
+    <h2>Buyer Information</h2>
+    <form action="{% url 'logout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Logout</button>
+    </form>
+</header>
+
+<main>
+    <section class="listings">
+        <div class="box-container">
+            {% for buyer in buyers %}
+            <div class="box">
+                <p><strong>Name:</strong> {{ buyer.name }}</p>
+                <p><strong>Email:</strong> {{ buyer.email }}</p>
+                <p><strong>Phone:</strong> {{ buyer.phone }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+</main>
+
+<script src="{% static 'js/script.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,143 @@
+/* =============================================================================
+   FILE: static/css/partnerships.css
+   -----------------------------------------------------------------------------
+   PURPOSE:  Styles that apply ONLY to the Partnerships section (the full-width
+             band of partner logos).
+   ROLE:     Loaded in addition to style.css on the home page and the dedicated
+             partnerships page (see partnership.html / home.html). Kept separate
+             so the section's distinctive look doesn't clutter the main sheet.
+   USED BY:  templates/partnership.html (extra_css block) and templates/home.html.
+   ============================================================================= */
+
+/* --- Page reset for this section: remove default body spacing --- */
+body {
+    margin: 0;
+    padding: 0;
+}
+
+/* --- Section container: full-width green band with generous padding --- */
+.partnerships-section {
+    background-color: #2d5b1f;   /* dark green background */
+    color: white;
+    text-align: center;
+    padding: 80px 20px;
+    width: 100vw;                 /* full viewport width */
+    margin-left: calc(-50vw + 50%);  /* break out of any container to go edge-to-edge */
+    min-height: 100vh;
+}
+
+/* TITLE */
+.partnerships-section h1 {
+    font-size: 48px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+}
+
+/* SUBTITLE */
+.subtitle {
+    max-width: 700px;
+    margin: 0 auto 50px;
+    font-size: 18px;
+    line-height: 1.6;
+    color: #e0e0e0;
+}
+
+/* GRID */
+/* Auto-fitting grid of partner tiles that reflows on smaller screens. */
+.partners-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 60px 80px;
+    max-width: 1000px;
+    margin: 0 auto;
+    align-items: center;
+}
+
+/* LOGO BOX */
+.partner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.8s ease forwards;   /* gentle fade+rise on load */
+}
+
+/* IMAGE STYLE (CONSISTENT SIZE) */
+.partner img {
+    height: 290px;   /* increased from 70px */
+    width: auto;
+    object-fit: contain;                 /* keep the whole logo visible */
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+/* HOVER ONLY EFFECT */
+.partner img:hover {
+    transform: scale(1.15);              /* slight zoom on hover */
+    filter: brightness(1.1);             /* and a touch brighter */
+}
+
+/* REMOVE LINK STYLE */
+a {
+    text-decoration: none;
+}
+
+/* ANIMATION */
+/* Defines the fadeIn keyframes used by .partner (fade in while moving up). */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Home-page refinement: retain the existing green and white palette while
+   keeping the partner band compact and its logos at a consistent scale. */
+#partnership .partnerships-section{
+    min-height: 0;
+    padding: 5.6rem 2rem;
+}
+
+#partnership .partnerships-section h1{
+    margin-bottom: 1.2rem;
+    font-size: 3.4rem;
+    letter-spacing: .08em;
+}
+
+#partnership .subtitle{
+    margin-bottom: 3.2rem;
+    font-size: 1.6rem;
+}
+
+#partnership .partners-container{
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: 3.2rem;
+    max-width: 1200px;
+}
+
+#partnership .partner{
+    min-height: 11rem;
+}
+
+#partnership .partner img{
+    max-width: 100%;
+    height: 10rem;
+}
+
+@media (max-width: 560px){
+    #partnership .partnerships-section{
+        padding: 4rem 2rem;
+    }
+
+    #partnership .partners-container{
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 2rem;
+    }
+
+    #partnership .partner img{
+        height: 8rem;
+    }
+}

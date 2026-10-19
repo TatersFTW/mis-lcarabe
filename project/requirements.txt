@@ -1,0 +1,26 @@
+# =============================================================================
+# FILE: requirements.txt
+# -----------------------------------------------------------------------------
+# PURPOSE:  Lists the Python packages this project depends on. Install them all
+#           with:  pip install -r requirements.txt
+# NOTE:     The version specifiers below are minimums (">="). Recreate the
+#           virtual environment first if the bundled .venv fails to start
+#           (see README.md).
+# =============================================================================
+
+Django>=6.0,<6.1        # The web framework itself. Pinned to the 6.0 series.
+
+mysqlclient>=2.2        # Native MySQL driver for Django's MySQL backend. Needs
+                        # system build tools; on Windows it can fail to install.
+
+PyMySQL>=1.1            # Pure-Python MySQL driver used as a fallback when
+                        # mysqlclient is unavailable (settings.py enables it).
+
+openpyxl>=3.1           # Reads/writes .xlsx Excel files. Used to export the
+                        # commission slips (see export_commissions in views.py).
+
+pandas>=2.2             # Data-analysis library (listed for spreadsheet/data
+                        # handling; not currently imported by the app code).
+
+Pillow>=10.0            # Image-handling library required by Django's
+                        # ImageField (property photos, partner logos, reviews).

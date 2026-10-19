@@ -1,0 +1,7 @@
+# Local Django data and generated files; keep these out of the repository.
+/db.sqlite3
+/.env
+/media/
+/staticfiles/
+__pycache__/
+*.py[cod]
