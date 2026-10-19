@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% comment %} =============================================================================
+   FILE: app/templates/register.html
+   -----------------------------------------------------------------------------
+   PURPOSE:  The account sign-up page.
+   ROLE:     Extends base.html and fills 'content' with the registration form,
+             rendering each field's label, input, help text and errors. Newly
+             created users default to the 'buyer' role unless changed in admin.
+   USED BY:  The 'register_view' view (URL name 'register'). Expects a 'form'
+             variable (a CustomUserCreationForm).
+   ============================================================================= {% endcomment %}
+
+{% block title %}Register | L.C. Arabe Realty{% endblock %}
+
+{% block content %}
+<section class="form-container auth-page">
+   <form method="post" novalidate>
+      {% csrf_token %}
+      <h3>Create an account</h3>
+      <p class="help-text">New accounts are registered as buyers. An administrator assigns agent or broker roles.</p>
+      {% if form.non_field_errors %}
+         <div class="form-errors">{{ form.non_field_errors }}</div>
+      {% endif %}
+      {% for field in form %}
+         {# Render each field with its help text (e.g. password rules) and errors. #}
+         <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+         {{ field }}
+         {% if field.help_text %}<small class="help-text">{{ field.help_text }}</small>{% endif %}
+         {% if field.errors %}<div class="field-error">{{ field.errors }}</div>{% endif %}
+      {% endfor %}
+      <p>Already have an account? <a href="{% url 'login' %}">Login now</a></p>
+      <button type="submit" class="btn">Register now</button>
+   </form>
+</section>
+{% endblock %}

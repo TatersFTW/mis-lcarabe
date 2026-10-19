@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% comment %} =============================================================================
+   FILE: app/templates/buyer_dashboard.html
+   -----------------------------------------------------------------------------
+   PURPOSE:  The buyer's home dashboard.
+   ROLE:     Extends base.html. Shows recommended (available) properties, the
+             buyer's saved/favorite properties, and a list of agents to contact.
+   USED BY:  The 'BuyerDashboardView' view (URL name 'buyer_dashboard').
+   CONTEXT:  properties (recommended), favorites, agents.
+   ============================================================================= {% endcomment %}
+
+{% block title %}Buyer Dashboard{% endblock %}
+
+{% block content %}
+<section class="dashboard-shell">
+   <div class="dashboard-header">
+      <div>
+         <span class="eyebrow">Buyer Dashboard</span>
+         <h1>Welcome, {{ user.first_name|default:user.username }}</h1>
+         <p>Browse properties, save favorites, and contact agents directly.</p>
+      </div>
+      <div class="dashboard-actions">
+         <a href="{% url 'search_properties' %}" class="inline-btn"><i class="fas fa-search"></i> Search Properties</a>
+      </div>
+   </div>
+
+   <div class="dashboard-grid">
+      <section class="panel wide">
+         <div class="panel-title"><h2>Recommended Properties</h2></div>
+         <div class="property-grid">
+            {% for property in properties %}
+               <article class="property-card">
+                  {% if property.image %}<img src="{{ property.image.url }}" alt="{{ property.title }}">{% endif %}
+                  <div class="content">
+                     <h3>PHP {{ property.price|floatformat:2 }}</h3>
+                     <p class="title">{{ property.title }}</p>
+                     <p class="details">{{ property.city }}, {{ property.province }}</p>
+                     <a href="{% url 'property_detail' property.id %}" class="view-btn">View Details</a>
+                  </div>
+               </article>
+            {% empty %}
+               <p>No active properties available.</p>
+            {% endfor %}
+         </div>
+      </section>
+
+      <section class="panel">
+         <div class="panel-title"><h2>Saved Properties</h2></div>
+         {# The buyer's favorite properties, newest first. #}
+         <ul class="activity-list">
+            {% for favorite in favorites %}
+               <li><strong>{{ favorite.property.title }}</strong> <span>PHP {{ favorite.property.price|floatformat:2 }}</span></li>
+            {% empty %}
+               <li>No saved properties yet.</li>
+            {% endfor %}
+         </ul>
+      </section>
+
+      <section class="panel">
+         <div class="panel-title"><h2>Available Agents</h2></div>
+         <ul class="activity-list">
+            {% for agent in agents %}
+               <li><strong>{{ agent.first_name|default:agent.username }}</strong> <span>{{ agent.phone|default:agent.email }}</span></li>
+            {% empty %}
+               <li>No agents available.</li>
+            {% endfor %}
+         </ul>
+      </section>
+   </div>
+</section>
+{% endblock %}

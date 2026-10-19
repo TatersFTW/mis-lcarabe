@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% comment %} =============================================================================
+   FILE: app/templates/seminars/list.html
+   -----------------------------------------------------------------------------
+   PURPOSE:  Lists seminars as cards.
+   ROLE:     Extends base.html. Brokers see Create/Edit/Delete and every seminar
+             (including drafts); agents see a Register button for published ones.
+             Shows status, date/time, venue/link, speaker and any attachment.
+   USED BY:  The 'SeminarListView' view (URL name 'seminar_list').
+   ============================================================================= {% endcomment %}
+
+{% block title %}Seminars and Webinars{% endblock %}
+
+{% block content %}
+<section class="dashboard-shell">
+   <div class="dashboard-header">
+      <div><span class="eyebrow">Training</span><h1>Seminars and Webinars</h1></div>
+      {% if user.user_type == 'broker' %}
+         <a href="{% url 'seminar_create' %}" class="inline-btn"><i class="fas fa-plus"></i> Create Seminar</a>
+      {% endif %}
+   </div>
+
+   <div class="property-grid">
+      {% for seminar in seminars %}
+         <article class="panel">
+            <span class="status-pill {% if seminar.status == 'published' %}active{% else %}draft{% endif %}">{{ seminar.get_status_display }}</span>
+            <h2>{{ seminar.title }}</h2>
+            <p>{{ seminar.description }}</p>
+            <ul class="activity-list">
+               <li><strong>Date:</strong> <span>{{ seminar.date }} {{ seminar.time }}</span></li>
+               <li><strong>Venue/Link:</strong> <span>{{ seminar.venue_or_link }}</span></li>
+               <li><strong>Speaker:</strong> <span>{{ seminar.speaker }}</span></li>
+            </ul>
+            <div class="card-actions">
+               {% if seminar.attachment %}<a href="{{ seminar.attachment.url }}" class="inline-btn">Download Attachment</a>{% endif %}
+               {% if user.user_type == 'agent' %}
+                  <form method="post" action="{% url 'seminar_register' seminar.pk %}">{% csrf_token %}<button class="inline-btn">Register</button></form>
+               {% endif %}
+               {% if user.user_type == 'broker' %}
+                  <a href="{% url 'seminar_update' seminar.pk %}" class="inline-btn">Edit</a>
+                  <a href="{% url 'seminar_delete' seminar.pk %}" class="inline-btn">Delete</a>
+               {% endif %}
+            </div>
+         </article>
+      {% empty %}
+         <p class="empty-state">No seminars available.</p>
+      {% endfor %}
+   </div>
+</section>
+{% endblock %}

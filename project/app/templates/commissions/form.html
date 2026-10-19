@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% comment %} =============================================================================
+   FILE: app/templates/commissions/form.html
+   -----------------------------------------------------------------------------
+   PURPOSE:  The create/edit form for a commission slip.
+   ROLE:     Extends base.html. Renders every CommissionSlipForm field. The page
+             title ('Create'/'Edit') comes from the view via the 'title' variable.
+   USED BY:  CommissionSlipCreateView and CommissionSlipUpdateView.
+   NOTE:     The commission amount is not a field here; it is calculated by the
+             model from sale amount and percentage.
+   ============================================================================= {% endcomment %}
+
+{% block title %}{{ title|default:'Commission Slip' }}{% endblock %}
+
+{% block content %}
+<section class="form-container">
+   <form method="post" class="add-property-form">
+      {% csrf_token %}
+      <h3>{{ title|default:'Commission Slip' }}</h3>
+      {% for field in form %}
+         <p>{{ field.label_tag }}{{ field }}{{ field.errors }}</p>
+      {% endfor %}
+      <small class="help-text">Commission amount is calculated automatically from sale amount and percentage.</small>
+      <button class="btn" type="submit">Save Commission Slip</button>
+      <p><a href="{% url 'commission_list' %}">Back to Commission Slips</a></p>
+   </form>
+</section>
+{% endblock %}

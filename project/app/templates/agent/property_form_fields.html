@@ -1,0 +1,58 @@
+{% comment %} =============================================================================
+   FILE: app/templates/agent/property_form_fields.html
+   -----------------------------------------------------------------------------
+   PURPOSE:  The reusable body of the add/edit property form (all the fields).
+   ROLE:     A partial that renders every PropertyForm field grouped into sections:
+             Property Details; Price, Location and Status; and Images. Because it
+             is shared, add and edit stay in sync. Each field shows its label,
+             input, and errors.
+   USED BY:  agent/add_property.html and agent/edit_property.html.
+   NOTE:     The extra multiple-file "images" input (gallery) is handled by the
+             view, not by PropertyForm itself.
+   ============================================================================= {% endcomment %}
+
+{% if form.non_field_errors %}
+   <div class="form-errors">{{ form.non_field_errors }}</div>
+{% endif %}
+
+<div class="form-section">
+   <h4>Property Details</h4>
+   <div class="form-grid">
+      <div>{{ form.title.label_tag }}{{ form.title }}{{ form.title.errors }}</div>
+      <div>{{ form.property_type.label_tag }}{{ form.property_type }}{{ form.property_type.errors }}</div>
+      <div class="span-2">{{ form.description.label_tag }}{{ form.description }}{{ form.description.errors }}</div>
+      <div>{{ form.bedrooms.label_tag }}{{ form.bedrooms }}{{ form.bedrooms.errors }}</div>
+      <div>{{ form.bathrooms.label_tag }}{{ form.bathrooms }}{{ form.bathrooms.errors }}</div>
+      <div>{{ form.floor_area.label_tag }}{{ form.floor_area }}{{ form.floor_area.errors }}</div>
+      <div>{{ form.lot_area.label_tag }}{{ form.lot_area }}{{ form.lot_area.errors }}</div>
+      <div>{{ form.parking_spaces.label_tag }}{{ form.parking_spaces }}{{ form.parking_spaces.errors }}</div>
+   </div>
+</div>
+
+<div class="form-section">
+   <h4>Price, Location, and Status</h4>
+   <div class="form-grid">
+      <div>{{ form.price.label_tag }}{{ form.price }}{{ form.price.errors }}</div>
+      <div>{{ form.listing_status.label_tag }}{{ form.listing_status }}{{ form.listing_status.errors }}</div>
+      <div>{{ form.location.label_tag }}{{ form.location }}{{ form.location.errors }}</div>
+      <div>{{ form.city.label_tag }}{{ form.city }}{{ form.city.errors }}</div>
+      <div>{{ form.province.label_tag }}{{ form.province }}{{ form.province.errors }}</div>
+      <label class="checkbox-row">{{ form.is_available }} Available listing</label>
+      <div class="span-2">{{ form.amenities.label_tag }}{{ form.amenities }}{{ form.amenities.errors }}</div>
+   </div>
+</div>
+
+<div class="form-section">
+   <h4>Images</h4>
+   <div class="form-grid">
+      <div>
+         {{ form.image.label_tag }}{{ form.image }}{{ form.image.errors }}
+         {% if property.image %}<img src="{{ property.image.url }}" class="image-preview" alt="Main property image">{% endif %}
+      </div>
+      <div>
+         <label for="images">Upload Additional Images</label>
+         <input type="file" name="images" id="images" class="box" multiple accept="image/*">
+         <small class="help-text">Images up to 5MB each are accepted.</small>
+      </div>
+   </div>
+</div>

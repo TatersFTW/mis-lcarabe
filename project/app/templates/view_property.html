@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+{% comment %} =============================================================================
+   FILE: app/templates/view_property.html
+   -----------------------------------------------------------------------------
+   PURPOSE:  The detail page for a single property.
+   ROLE:     Extends base.html. Shows the image gallery (main image + thumbnails,
+             wired up by script.js), all listing details, a Save/Remove Favorite
+             button for buyers, and a "Contact Agent" inquiry form.
+   USED BY:  The 'property_detail' view (URL name 'property_detail'). Expects
+             'property', 'form' (PropertyInquiryForm) and 'is_favorite'.
+   ============================================================================= {% endcomment %}
+
+{% block title %}{{ property.title }}{% endblock %}
+
+{% block content %}
+<section class="property-details">
+   <div class="details-container">
+      <div class="image-section">
+         {# Main image: prefers the cover image, else the first gallery image, else a default. #}
+         <div class="main-image-container">
+            {% if property.image %}
+               <img src="{{ property.image.url }}" class="main-image" id="mainImage" alt="{{ property.title }}">
+            {% elif property.images.first %}
+               <img src="{{ property.images.first.image.url }}" class="main-image" id="mainImage" alt="{{ property.title }}">
+            {% else %}
+               <img src="{% static 'images/house-img-1.webp' %}" class="main-image" id="mainImage" alt="Property">
+            {% endif %}
+         </div>
+         <div class="gallery">
+            {% if property.image %}<img src="{{ property.image.url }}" class="thumb" alt="Main image">{% endif %}
+            {% for img in property.images.all %}
+               <img src="{{ img.image.url }}" class="thumb" alt="Gallery image">
+            {% endfor %}
+         </div>
+      </div>
+
+      <div class="info-section">
+         <h1>{{ property.title }}</h1>
+         <h2 class="price">PHP {{ property.price|floatformat:2 }}</h2>
+         <p class="location"><i class="fas fa-location-dot"></i> {{ property.location }}, {{ property.city }}, {{ property.province }}</p>
+         <div class="features">
+            <span>{{ property.bedrooms }} Beds</span>
+            <span>{{ property.bathrooms }} Baths</span>
+            <span>{{ property.parking_spaces }} Parking</span>
+         </div>
+         <div class="area">Floor: {{ property.floor_area }} sqm | Lot: {{ property.lot_area }} sqm</div>
+         <p class="description">{{ property.description }}</p>
+         {% if property.amenities %}<p class="description"><strong>Amenities:</strong> {{ property.amenities }}</p>{% endif %}
+         <span class="status-badge">{{ property.status_label }}</span>
+
+         <div class="card-actions">
+            {% if user.is_authenticated and user.user_type == 'buyer' %}
+               {# Buyers can save/un-save. The hidden 'next' field returns them here after. #}
+               <form method="post" action="{% url 'toggle_favorite' property.id %}">
+                  {% csrf_token %}
+                  <input type="hidden" name="next" value="{% url 'property_detail' property.id %}">
+                  <button class="inline-btn" type="submit">{% if is_favorite %}Remove Favorite{% else %}Save Property{% endif %}</button>
+               </form>
+            {% endif %}
+            <a href="{% url 'search_properties' %}" class="inline-btn">Back to Search</a>
+         </div>
+      </div>
+   </div>
+
+   <div class="details-container contact-agent-panel">
+      <div>
+         <h2>Contact Agent</h2>
+         <p>{{ property.agent.first_name|default:property.agent.username }} | {{ property.agent.email }}{% if property.agent.phone %} | {{ property.agent.phone }}{% endif %}</p>
+      </div>
+      <form method="post" class="compact-form">
+         {% csrf_token %}
+         {# Hidden flag tells the view this is a "contact agent" submission. #}
+         <input type="hidden" name="contact_agent" value="1">
+         {% for field in form %}
+            <div>{{ field.label_tag }}{{ field }}{{ field.errors }}</div>
+         {% endfor %}
+         <button type="submit" class="btn">Send Inquiry</button>
+      </form>
+   </div>
+</section>
+{% endblock %}

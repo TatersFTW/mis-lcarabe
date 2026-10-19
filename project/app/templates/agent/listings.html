@@ -1,0 +1,59 @@
+{% comment %} =============================================================================
+   FILE: app/templates/agent/listings.html
+   -----------------------------------------------------------------------------
+   PURPOSE:  A grid of property cards reused in several places (public listings,
+             the agent dashboard, etc.).
+   ROLE:     Loops over 'properties'. For each card it shows the owner's initial,
+             date, image, type/status, location, bed/bath/area, and View/Edit/
+             Delete actions. Edit/Delete only appear for the property's own agent.
+   USED BY:  ListingsPageView, agent_dashboard.html, and ManagepropertiesView.
+   ============================================================================= {% endcomment %}
+
+{% load static %}
+
+<div class="box-container">
+   {% for property in properties %}
+      <div class="box">
+         <div class="admin">
+            <h3>{{ property.agent.username|first|upper }}</h3>
+            <div>
+               <p>{{ property.agent.first_name|default:property.agent.username }}</p>
+               <span>{{ property.created_at|date:"M d, Y" }}</span>
+            </div>
+         </div>
+
+         <div class="thumb">
+            <p class="total-images"><i class="far fa-image"></i> <span>{{ property.images.count|default:"0" }}</span></p>
+            <p class="type"><span>{{ property.get_property_type_display }}</span><span>{{ property.status_label }}</span></p>
+            {% if property.images.first %}
+               <img src="{{ property.images.first.image.url }}" alt="{{ property.title }}">
+            {% elif property.image %}
+               <img src="{{ property.image.url }}" alt="{{ property.title }}">
+            {% else %}
+               <img src="{% static 'images/house-img-1.webp' %}" alt="No image">
+            {% endif %}
+         </div>
+
+         <h3 class="name">{{ property.title }}</h3>
+         <p class="location"><i class="fas fa-map-marker-alt"></i><span>{{ property.location }}, {{ property.city }}</span></p>
+         <div class="flex">
+            <p><i class="fas fa-bed"></i> <span>{{ property.bedrooms }}</span></p>
+            <p><i class="fas fa-bath"></i> <span>{{ property.bathrooms }}</span></p>
+            <p><i class="fas fa-expand"></i> <span>{{ property.floor_area }} sqm</span></p>
+         </div>
+
+         <div class="card-actions">
+            <a href="{% url 'property_detail' property.id %}" class="inline-btn">View</a>
+            {% if user.is_authenticated and user.id == property.agent_id %}
+               <a href="{% url 'edit_property' property.id %}" class="inline-btn">Edit</a>
+               <form action="{% url 'delete_property' property.id %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="inline-btn" onclick="return confirm('Delete this property listing?');">Delete</button>
+               </form>
+            {% endif %}
+         </div>
+      </div>
+   {% empty %}
+      <p class="empty-state">No properties listed.</p>
+   {% endfor %}
+</div>

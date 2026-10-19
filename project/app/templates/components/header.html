@@ -1,0 +1,92 @@
+{% comment %} =============================================================================
+   FILE: app/templates/components/header.html
+   -----------------------------------------------------------------------------
+   PURPOSE:  The site-wide top navigation, included at the top of every page.
+   ROLE:     Shows different links depending on who is logged in (guest, buyer,
+             agent, or broker) using {% if user.is_authenticated %} and role
+             checks. Includes the logo, main menu, account dropdown and logout.
+             Below the nav it renders any one-time Django flash messages.
+   USED BY:  base.html and the standalone pages (home, about, contact, etc.).
+   NOTE:     The "Notifications" and some account links are placeholders ('#').
+   ============================================================================= {% endcomment %}
+
+{% load static %}
+
+<header class="header">
+   <nav class="navbar nav-1">
+      <section class="container flex">
+         <a href="{% url 'home' %}" class="logo">
+            <img src="{% static 'images/logo.png' %}" alt="L.C. Arabe Realty">
+            <span>L. C. ARABE REALTY</span>
+         </a>
+
+         <ul class="top-actions">
+            {# Logged-in users get a Dashboard link; agents also get "Post Property". #}
+            {% if user.is_authenticated %}
+               <li><a href="{% url 'dashboard_redirect' %}">Dashboard <i class="fas fa-table-columns"></i></a></li>
+               {% if user.user_type == 'agent' %}
+                  <li><a href="{% url 'add_property' %}">Post Property <i class="fas fa-paper-plane"></i></a></li>
+               {% endif %}
+            {% else %}
+               <li><a href="{% url 'login' %}">Login <i class="fas fa-right-to-bracket"></i></a></li>
+            {% endif %}
+         </ul>
+      </section>
+   </nav>
+
+   <nav class="navbar nav-2">
+      <section class="container flex">
+         <div id="menu-btn" class="fas fa-bars"></div>
+
+         <div class="menu">
+            <ul>
+               <li><a href="{% url 'search_properties' %}">Properties <i class="fas fa-house"></i></a></li>
+               <li><a href="{% url 'seminar_list' %}">Seminars <i class="fas fa-chalkboard-user"></i></a></li>
+               {# Broker-only links: manage agents + commissions. Agents see "My Commissions". #}
+               {% if user.is_authenticated and user.user_type == 'broker' %}
+                  <li><a href="{% url 'manage_agents' %}">Agents <i class="fas fa-users"></i></a></li>
+                  <li><a href="{% url 'commission_list' %}">Commissions <i class="fas fa-file-invoice-dollar"></i></a></li>
+               {% elif user.is_authenticated and user.user_type == 'agent' %}
+                  <li><a href="{% url 'commission_list' %}">My Commissions <i class="fas fa-file-invoice-dollar"></i></a></li>
+               {% endif %}
+               <li><a href="{% url 'about' %}">About <i class="fas fa-circle-info"></i></a></li>
+               <li><a href="{% url 'contact' %}">Contact <i class="fas fa-phone"></i></a></li>
+            </ul>
+         </div>
+
+         <ul class="account-menu">
+            <li><a href="#">Notifications <i class="far fa-bell"></i></a></li>
+            {% if user.is_authenticated %}
+               <li><a href="#">Profile <i class="fas fa-angle-down"></i></a>
+                  <ul>
+                     <li><a href="{% url 'dashboard_redirect' %}">{{ user.get_user_type_display }} Dashboard</a></li>
+                     <li><a href="#">{{ user.email }}</a></li>
+                     <li>
+                        <form action="{% url 'logout' %}" method="post" class="nav-logout-form">
+                           {% csrf_token %}
+                           <button type="submit">Logout</button>
+                        </form>
+                     </li>
+                  </ul>
+               </li>
+            {% else %}
+               <li><a href="#">Account <i class="fas fa-angle-down"></i></a>
+                  <ul>
+                     <li><a href="{% url 'login' %}">Login</a></li>
+                     <li><a href="{% url 'register' %}">Register</a></li>
+                  </ul>
+               </li>
+            {% endif %}
+         </ul>
+      </section>
+   </nav>
+</header>
+
+{% if messages %}
+   <section class="messages">
+         {% for message in messages %}
+            {# Django flash messages, e.g. success/error notices shown once after an action. #}
+            <div class="message {{ message.tags }}">{{ message }}</div>
+         {% endfor %}
+   </section>
+{% endif %}

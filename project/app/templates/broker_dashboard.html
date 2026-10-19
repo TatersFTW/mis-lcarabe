@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% comment %} =============================================================================
+   FILE: app/templates/broker_dashboard.html
+   -----------------------------------------------------------------------------
+   PURPOSE:  The broker's home dashboard.
+   ROLE:     Extends base.html. Shows summary stat cards (agents, buyers,
+             properties, active/sold listings, sales), an agent-performance table,
+             recent property activity, and upcoming seminars.
+   USED BY:  The 'BrokerDashboardView' view (URL name 'broker_dashboard').
+   CONTEXT:  total_agents, total_buyers, total_properties, active_listings,
+             sold_listings, monthly_sales, agents (annotated), recent_properties,
+             recent_commissions, upcoming_seminars.
+   ============================================================================= {% endcomment %}
+
+{% block title %}Broker Dashboard{% endblock %}
+
+{% block content %}
+<section class="dashboard-shell">
+   <div class="dashboard-header">
+      <div>
+         <span class="eyebrow">Broker Dashboard</span>
+         <h1>Welcome, {{ user.first_name|default:user.username }}</h1>
+         <p>Manage agents, monitor properties, publish seminars, and release commissions.</p>
+      </div>
+      <div class="dashboard-actions">
+         <a href="{% url 'manage_agents' %}" class="inline-btn"><i class="fas fa-users"></i> Agents</a>
+         <a href="{% url 'commission_create' %}" class="inline-btn"><i class="fas fa-file-circle-plus"></i> Commission</a>
+         <a href="{% url 'seminar_create' %}" class="inline-btn"><i class="fas fa-plus"></i> Seminar</a>
+      </div>
+   </div>
+
+   <div class="stats-grid">
+      <div class="stat-card"><span>Total Agents</span><strong>{{ total_agents }}</strong></div>
+      <div class="stat-card"><span>Total Buyers</span><strong>{{ total_buyers }}</strong></div>
+      <div class="stat-card"><span>Total Properties</span><strong>{{ total_properties }}</strong></div>
+      <div class="stat-card"><span>Active Listings</span><strong>{{ active_listings }}</strong></div>
+      <div class="stat-card"><span>Sold Listings</span><strong>{{ sold_listings }}</strong></div>
+      <div class="stat-card"><span>Monthly Sales</span><strong>PHP {{ monthly_sales|floatformat:2 }}</strong></div>
+   </div>
+
+   <div class="dashboard-grid">
+      <section class="panel wide">
+         <div class="panel-title">
+            <h2>Agent Performance</h2>
+            {# Each agent row shows annotated counts/totals supplied by the view. #}
+            <a href="{% url 'manage_agents' %}">View all</a>
+         </div>
+         <div class="table-wrap">
+            <table class="data-table">
+               <thead>
+                  <tr><th>Agent Name</th><th>Email</th><th>Contact Number</th><th>Properties</th><th>Total Sales</th><th>Status</th></tr>
+               </thead>
+               <tbody>
+                  {% for agent in agents %}
+                     <tr>
+                        <td>{{ agent.first_name|default:agent.username }}</td>
+                        <td>{{ agent.email }}</td>
+                        <td>{{ agent.phone|default:'-' }}</td>
+                        <td>{{ agent.property_count|default:0 }}</td>
+                        <td>PHP {{ agent.sales_total|default:0|floatformat:2 }}</td>
+                        <td><span class="status-pill {% if agent.is_active %}active{% else %}sold{% endif %}">{% if agent.is_active %}Active{% else %}Inactive{% endif %}</span></td>
+                     </tr>
+                  {% empty %}
+                     <tr><td colspan="6">No agents found.</td></tr>
+                  {% endfor %}
+               </tbody>
+            </table>
+         </div>
+      </section>
+
+      <section class="panel">
+         <div class="panel-title"><h2>Recent Activities</h2></div>
+         <ul class="activity-list">
+            {% for property in recent_properties %}
+               <li><strong>{{ property.agent.first_name|default:property.agent.username }}</strong> posted {{ property.title }} <span>{{ property.created_at|date:"M d, Y" }}</span></li>
+            {% empty %}
+               <li>No recent property activity.</li>
+            {% endfor %}
+         </ul>
+      </section>
+
+      <section class="panel">
+         <div class="panel-title"><h2>Upcoming Seminars</h2><a href="{% url 'seminar_list' %}">Manage</a></div>
+         <ul class="activity-list">
+            {% for seminar in upcoming_seminars %}
+               <li><strong>{{ seminar.title }}</strong> with {{ seminar.speaker }} <span>{{ seminar.date }} {{ seminar.time }}</span></li>
+            {% empty %}
+               <li>No published upcoming seminars.</li>
+            {% endfor %}
+         </ul>
+      </section>
+   </div>
+</section>
+{% endblock %}

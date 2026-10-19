@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% comment %} =============================================================================
+   FILE: app/templates/agent_dashboard.html
+   -----------------------------------------------------------------------------
+   PURPOSE:  The agent's home dashboard.
+   ROLE:     Extends base.html. Shows the agent's stat cards (their total/active/
+             sold properties and recent inquiries), their property listings (via
+             the shared listings partial), recent inquiries, and upcoming seminars.
+   USED BY:  The 'agent_dashboard_view' view (URL name 'agent_dashboard').
+   INCLUDES: agent/listings.html (the agent's own property cards).
+   ============================================================================= {% endcomment %}
+
+{% block title %}Agent Dashboard{% endblock %}
+
+{% block content %}
+<section class="dashboard-shell">
+   <div class="dashboard-header">
+      <div>
+         <span class="eyebrow">Agent Dashboard</span>
+         <h1>{{ user.first_name|default:user.username }}</h1>
+         <p>Create listings, monitor inquiries, and access seminars and commission slips.</p>
+      </div>
+      <div class="dashboard-actions">
+         <a href="{% url 'add_property' %}" class="inline-btn"><i class="fas fa-plus"></i> Add Property</a>
+         <a href="{% url 'commission_list' %}" class="inline-btn"><i class="fas fa-file-invoice-dollar"></i> Commissions</a>
+      </div>
+   </div>
+
+   <div class="stats-grid">
+      <div class="stat-card"><span>Total Properties</span><strong>{{ total_properties }}</strong></div>
+      <div class="stat-card"><span>Active Listings</span><strong>{{ active_listings }}</strong></div>
+      <div class="stat-card"><span>Sold Properties</span><strong>{{ sold_properties }}</strong></div>
+      <div class="stat-card"><span>Recent Inquiries</span><strong>{{ recent_inquiries|length }}</strong></div>
+   </div>
+
+   <div class="dashboard-grid">
+      <section class="panel wide">
+         <div class="panel-title"><h2>My Property Listings</h2></div>
+         {% include "agent/listings.html" %}
+      </section>
+
+      <section class="panel">
+         <div class="panel-title"><h2>Recent Activities</h2></div>
+         <ul class="activity-list">
+            {% for inquiry in recent_inquiries %}
+               <li><strong>{{ inquiry.name }}</strong> asked about {{ inquiry.property.title }} <span>{{ inquiry.created_at|date:"M d, Y" }}</span></li>
+            {% empty %}
+               <li>No inquiries yet.</li>
+            {% endfor %}
+         </ul>
+      </section>
+
+      <section class="panel">
+         <div class="panel-title"><h2>Upcoming Seminars</h2><a href="{% url 'seminar_list' %}">View</a></div>
+         <ul class="activity-list">
+            {% for seminar in upcoming_seminars %}
+               <li><strong>{{ seminar.title }}</strong> <span>{{ seminar.date }} {{ seminar.time }}</span></li>
+            {% empty %}
+               <li>No upcoming seminars.</li>
+            {% endfor %}
+         </ul>
+      </section>
+   </div>
+</section>
+{% endblock %}

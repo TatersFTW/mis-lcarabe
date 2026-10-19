@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% comment %} =============================================================================
+   FILE: app/templates/broker/manage_properties.html
+   -----------------------------------------------------------------------------
+   PURPOSE:  Broker page to monitor all properties across every agent.
+   ROLE:     Extends base.html. A GET filter form (agent, property type, status)
+             sits above a table of properties with a link to each detail page.
+   USED BY:  The 'ManagepropertiesView' view (URL name 'manage_properties').
+   ============================================================================= {% endcomment %}
+
+{% block title %}Manage Properties{% endblock %}
+
+{% block content %}
+<section class="dashboard-shell">
+   <div class="dashboard-header">
+      <div><span class="eyebrow">Broker</span><h1>Property Monitoring</h1></div>
+   </div>
+
+   <form method="get" class="filter-bar">
+      <select name="agent" class="box">
+         <option value="">All agents</option>
+         {% for agent in agents %}
+            <option value="{{ agent.id }}" {% if request.GET.agent == agent.id|stringformat:"s" %}selected{% endif %}>{{ agent.first_name|default:agent.username }}</option>
+         {% endfor %}
+      </select>
+      <select name="property_type" class="box">
+         <option value="">All property types</option>
+         {% for value,label in property_types %}
+            <option value="{{ value }}" {% if request.GET.property_type == value %}selected{% endif %}>{{ label }}</option>
+         {% endfor %}
+      </select>
+      <select name="status" class="box">
+         <option value="">All statuses</option>
+         {% for value,label in statuses %}
+            <option value="{{ value }}" {% if request.GET.status == value %}selected{% endif %}>{{ label }}</option>
+         {% endfor %}
+      </select>
+      <button class="inline-btn" type="submit"><i class="fas fa-filter"></i> Filter</button>
+   </form>
+
+   <section class="panel">
+      <div class="table-wrap">
+         <table class="data-table">
+            <thead><tr><th>Property</th><th>Agent</th><th>Location</th><th>Price</th><th>Status</th><th>Details</th></tr></thead>
+            <tbody>
+               {% for property in properties %}
+                  <tr>
+                     <td>{{ property.title }}</td>
+                     <td>{{ property.agent.first_name|default:property.agent.username }}</td>
+                     <td>{{ property.city }}, {{ property.province }}</td>
+                     <td>PHP {{ property.price|floatformat:2 }}</td>
+                     <td><span class="status-pill {% if property.status_label == 'Sold' %}sold{% else %}active{% endif %}">{{ property.status_label }}</span></td>
+                     <td><a href="{% url 'property_detail' property.id %}">View</a></td>
+                  </tr>
+               {% empty %}
+                  <tr><td colspan="6">No matching properties.</td></tr>
+               {% endfor %}
+            </tbody>
+         </table>
+      </div>
+   </section>
+</section>
+{% endblock %}

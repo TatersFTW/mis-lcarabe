@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% comment %} =============================================================================
+   FILE: app/templates/commissions/list.html
+   -----------------------------------------------------------------------------
+   PURPOSE:  Lists commission slips (used by both brokers and agents).
+   ROLE:     Extends base.html. Has a search + status filter and a table of slips.
+             Brokers see Create/Edit/Delete actions; agents only see a Download
+             link (their own slips). All users can export to Excel.
+   USED BY:  The 'CommissionSlipListView' view (URL name 'commission_list').
+   ============================================================================= {% endcomment %}
+
+{% block title %}Commission Slips{% endblock %}
+
+{% block content %}
+<section class="dashboard-shell">
+   <div class="dashboard-header">
+      <div><span class="eyebrow">Sales</span><h1>Commission Slips</h1></div>
+      <div class="dashboard-actions">
+         {% if user.user_type == 'broker' %}<a href="{% url 'commission_create' %}" class="inline-btn">Create Slip</a>{% endif %}
+         <a href="{% url 'commission_export' %}" class="inline-btn">Export Excel</a>
+      </div>
+   </div>
+
+   <form method="get" class="filter-bar">
+      <input type="text" name="q" class="box" placeholder="Search client, property, or agent" value="{{ request.GET.q }}">
+      <select name="status" class="box">
+         <option value="">All statuses</option>
+         <option value="draft" {% if request.GET.status == 'draft' %}selected{% endif %}>Draft</option>
+         <option value="released" {% if request.GET.status == 'released' %}selected{% endif %}>Released</option>
+         <option value="paid" {% if request.GET.status == 'paid' %}selected{% endif %}>Paid</option>
+      </select>
+      <button class="inline-btn" type="submit">Filter</button>
+   </form>
+
+   <section class="panel">
+      <div class="table-wrap">
+         <table class="data-table">
+            <thead><tr><th>Agent</th><th>Property</th><th>Client</th><th>Sale Amount</th><th>Commission</th><th>Date Released</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+               {% for slip in commissions %}
+                  <tr>
+                     <td>{{ slip.agent.first_name|default:slip.agent.username }}</td>
+                     <td>{{ slip.property.title }}</td>
+                     <td>{{ slip.client }}</td>
+                     <td>PHP {{ slip.sale_amount|floatformat:2 }}</td>
+                     <td>{{ slip.commission_percentage }}% / PHP {{ slip.commission_amount|floatformat:2 }}</td>
+                     <td>{{ slip.date_released|default:'-' }}</td>
+                     <td><span class="status-pill active">{{ slip.get_status_display }}</span></td>
+                     <td>
+                        {% if user.user_type == 'broker' %}
+                           <a href="{% url 'commission_update' slip.pk %}">Edit</a> |
+                           <a href="{% url 'commission_delete' slip.pk %}">Delete</a>
+                        {% else %}
+                           <a href="{% url 'commission_export' %}">Download</a>
+                        {% endif %}
+                     </td>
+                  </tr>
+               {% empty %}
+                  <tr><td colspan="8">No commission slips found.</td></tr>
+               {% endfor %}
+            </tbody>
+         </table>
+      </div>
+   </section>
+</section>
+{% endblock %}

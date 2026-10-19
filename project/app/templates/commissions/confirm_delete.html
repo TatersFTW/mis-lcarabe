@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% comment %} =============================================================================
+   FILE: app/templates/commissions/confirm_delete.html
+   -----------------------------------------------------------------------------
+   PURPOSE:  Confirmation page before a broker deletes a commission slip.
+   ROLE:     Extends base.html. Shows which agent/property the slip is for and
+             POSTs to confirm. 'object' is the CommissionSlip being deleted.
+   USED BY:  CommissionSlipDeleteView (a generic DeleteView).
+   ============================================================================= {% endcomment %}
+
+{% block title %}Delete Commission Slip{% endblock %}
+
+{% block content %}
+<section class="form-container">
+   <form method="post">
+      {% csrf_token %}
+      <h3>Delete Commission Slip</h3>
+      <p>Delete commission slip for {{ object.agent }} and {{ object.property }}?</p>
+      <button class="btn" type="submit">Delete</button>
+      <p><a href="{% url 'commission_list' %}">Cancel</a></p>
+   </form>
+</section>
+{% endblock %}

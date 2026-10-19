@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% comment %} =============================================================================
+   FILE: app/templates/broker/manage_agents.html
+   -----------------------------------------------------------------------------
+   PURPOSE:  Broker page to browse and search the agents.
+   ROLE:     Extends base.html. A GET filter form (search text + active/inactive)
+             sits above a table of agents showing their property counts and sales.
+   USED BY:  The 'ManageAgentsView' view (URL name 'manage_agents').
+   ============================================================================= {% endcomment %}
+
+{% block title %}Manage Agents{% endblock %}
+
+{% block content %}
+<section class="dashboard-shell">
+   <div class="dashboard-header">
+      <div><span class="eyebrow">Broker</span><h1>Agent Management</h1></div>
+   </div>
+
+   <form method="get" class="filter-bar">
+      <input type="text" name="q" class="box" placeholder="Search name, email, or phone" value="{{ request.GET.q }}">
+      <select name="status" class="box">
+         <option value="">All statuses</option>
+         <option value="active" {% if request.GET.status == 'active' %}selected{% endif %}>Active</option>
+         <option value="inactive" {% if request.GET.status == 'inactive' %}selected{% endif %}>Inactive</option>
+      </select>
+      <button class="inline-btn" type="submit"><i class="fas fa-search"></i> Search</button>
+   </form>
+
+   <section class="panel">
+      <div class="table-wrap">
+         <table class="data-table">
+            <thead><tr><th>Agent Name</th><th>Email</th><th>Contact Number</th><th>Properties</th><th>Total Sales</th><th>Status</th></tr></thead>
+            <tbody>
+               {% for agent in agents %}
+                  <tr>
+                     <td>{{ agent.first_name|default:agent.username }}</td>
+                     <td>{{ agent.email }}</td>
+                     <td>{{ agent.phone|default:'-' }}</td>
+                     <td>{{ agent.property_count|default:0 }}</td>
+                     <td>PHP {{ agent.sales_total|default:0|floatformat:2 }}</td>
+                     <td><span class="status-pill {% if agent.is_active %}active{% else %}sold{% endif %}">{% if agent.is_active %}Active{% else %}Inactive{% endif %}</span></td>
+                  </tr>
+               {% empty %}
+                  <tr><td colspan="6">No matching agents.</td></tr>
+               {% endfor %}
+            </tbody>
+         </table>
+      </div>
+   </section>
+</section>
+{% endblock %}

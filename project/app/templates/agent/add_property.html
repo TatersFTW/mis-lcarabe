@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% comment %} =============================================================================
+   FILE: app/templates/agent/add_property.html
+   -----------------------------------------------------------------------------
+   PURPOSE:  The form an agent uses to create a new property listing.
+   ROLE:     Extends base.html. The form uses enctype="multipart/form-data" so it
+             can upload images. The actual fields live in the shared partial.
+   USED BY:  The 'add_property' view (URL name 'add_property').
+   INCLUDES: agent/property_form_fields.html.
+   ============================================================================= {% endcomment %}
+
+{% block title %}Add Property{% endblock %}
+
+{% block content %}
+<section class="form-container">
+   <form method="post" enctype="multipart/form-data" class="add-property-form">
+      {% csrf_token %}
+      <h3>Add New Property</h3>
+      {% include 'agent/property_form_fields.html' %}
+      <button type="submit" class="btn">Add Property</button>
+      <p><a href="{% url 'agent_dashboard' %}">Back to Dashboard</a></p>
+   </form>
+</section>
+{% endblock %}
