@@ -11,12 +11,15 @@
              'property', 'form' (PropertyInquiryForm) and 'is_favorite'.
    ============================================================================= {% endcomment %}
 
-{% block title %}{{ property.title }}{% endblock %}
+{% block title %}{{ property.title }} | L. C. Arabe Realty{% endblock %}
 
 {% block content %}
-<section class="property-details">
-   <div class="details-container">
-      <div class="image-section">
+<section class="property-details" id="property-detail-page">
+   <div class="property-page-shell">
+      <a href="{% url 'search_properties' %}" class="property-back-link"><i class="fas fa-arrow-left" aria-hidden="true"></i> Back to properties</a>
+
+      <div class="details-container property-overview">
+         <div class="image-section property-image-section">
          {# Main image: prefers the cover image, else the first gallery image, else a default. #}
          <div class="main-image-container">
             {% if property.image %}
@@ -27,7 +30,7 @@
                <img src="{% static 'images/house-img-1.webp' %}" class="main-image" id="mainImage" alt="Property">
             {% endif %}
          </div>
-         <div class="gallery">
+         <div class="gallery" aria-label="Property photos">
             {% if property.image %}<img src="{{ property.image.url }}" class="thumb" alt="Main image">{% endif %}
             {% for img in property.images.all %}
                <img src="{{ img.image.url }}" class="thumb" alt="Gallery image">
@@ -35,48 +38,58 @@
          </div>
       </div>
 
-      <div class="info-section">
-         <h1>{{ property.title }}</h1>
-         <h2 class="price">PHP {{ property.price|floatformat:2 }}</h2>
-         <p class="location"><i class="fas fa-location-dot"></i> {{ property.location }}, {{ property.city }}, {{ property.province }}</p>
-         <div class="features">
-            <span>{{ property.bedrooms }} Beds</span>
-            <span>{{ property.bathrooms }} Baths</span>
-            <span>{{ property.parking_spaces }} Parking</span>
-         </div>
-         <div class="area">Floor: {{ property.floor_area }} sqm | Lot: {{ property.lot_area }} sqm</div>
-         <p class="description">{{ property.description }}</p>
-         {% if property.amenities %}<p class="description"><strong>Amenities:</strong> {{ property.amenities }}</p>{% endif %}
-         <span class="status-badge">{{ property.status_label }}</span>
+         <div class="info-section property-info-section">
+            <span class="status-badge">{{ property.status_label }}</span>
+            <h1>{{ property.title }}</h1>
+            <h2 class="price">PHP {{ property.price|floatformat:2 }}</h2>
+            <p class="location"><i class="fas fa-location-dot" aria-hidden="true"></i> {{ property.location }}, {{ property.city }}, {{ property.province }}</p>
+            <div class="features" aria-label="Property features">
+               <span><i class="fas fa-bed" aria-hidden="true"></i><strong>{{ property.bedrooms }}</strong> Beds</span>
+               <span><i class="fas fa-bath" aria-hidden="true"></i><strong>{{ property.bathrooms }}</strong> Baths</span>
+               <span><i class="fas fa-car" aria-hidden="true"></i><strong>{{ property.parking_spaces }}</strong> Parking</span>
+            </div>
+            <div class="area">
+               <span><i class="fas fa-ruler-combined" aria-hidden="true"></i> Floor area <strong>{{ property.floor_area }} sqm</strong></span>
+               <span><i class="fas fa-vector-square" aria-hidden="true"></i> Lot area <strong>{{ property.lot_area }} sqm</strong></span>
+            </div>
+            <div class="property-description">
+               <h2>About this property</h2>
+               <p>{{ property.description|default:"Contact our team to learn more about this property." }}</p>
+               {% if property.amenities %}<p class="amenities"><strong>Amenities:</strong> {{ property.amenities }}</p>{% endif %}
+            </div>
 
-         <div class="card-actions">
-            {% if user.is_authenticated and user.user_type == 'buyer' %}
-               {# Buyers can save/un-save. The hidden 'next' field returns them here after. #}
-               <form method="post" action="{% url 'toggle_favorite' property.id %}">
-                  {% csrf_token %}
-                  <input type="hidden" name="next" value="{% url 'property_detail' property.id %}">
-                  <button class="inline-btn" type="submit">{% if is_favorite %}Remove Favorite{% else %}Save Property{% endif %}</button>
-               </form>
-            {% endif %}
-            <a href="{% url 'search_properties' %}" class="inline-btn">Back to Search</a>
+            <div class="card-actions property-actions">
+               {% if user.is_authenticated and user.user_type == 'buyer' %}
+                  {# Buyers can save/un-save. The hidden 'next' field returns them here after. #}
+                  <form method="post" action="{% url 'toggle_favorite' property.id %}">
+                     {% csrf_token %}
+                     <input type="hidden" name="next" value="{% url 'property_detail' property.id %}">
+                     <button class="inline-btn" type="submit"><i class="{% if is_favorite %}fas fa-heart-crack{% else %}far fa-heart{% endif %}" aria-hidden="true"></i> {% if is_favorite %}Remove Favorite{% else %}Save Property{% endif %}</button>
+                  </form>
+               {% endif %}
+            </div>
          </div>
       </div>
-   </div>
 
-   <div class="details-container contact-agent-panel">
-      <div>
-         <h2>Contact Agent</h2>
-         <p>{{ property.agent.first_name|default:property.agent.username }} | {{ property.agent.email }}{% if property.agent.phone %} | {{ property.agent.phone }}{% endif %}</p>
+      <div class="details-container contact-agent-panel">
+         <div class="agent-summary">
+            <span class="eyebrow">Questions or ready to visit?</span>
+            <h2>Contact the agent</h2>
+            <p class="agent-name">{{ property.agent.first_name|default:property.agent.username }}</p>
+            <a href="mailto:{{ property.agent.email }}" class="agent-contact"><i class="fas fa-envelope" aria-hidden="true"></i> {{ property.agent.email }}</a>
+            {% if property.agent.phone %}<a href="tel:{{ property.agent.phone }}" class="agent-contact"><i class="fas fa-phone" aria-hidden="true"></i> {{ property.agent.phone }}</a>{% endif %}
+         </div>
+         <form method="post" class="compact-form inquiry-form">
+            <h3>Send an inquiry</h3>
+            {% csrf_token %}
+            {# Hidden flag tells the view this is a "contact agent" submission. #}
+            <input type="hidden" name="contact_agent" value="1">
+            {% for field in form %}
+               <div class="inquiry-field">{{ field.label_tag }}{{ field }}{{ field.errors }}</div>
+            {% endfor %}
+            <button type="submit" class="btn"><i class="fas fa-paper-plane" aria-hidden="true"></i> Send inquiry</button>
+         </form>
       </div>
-      <form method="post" class="compact-form">
-         {% csrf_token %}
-         {# Hidden flag tells the view this is a "contact agent" submission. #}
-         <input type="hidden" name="contact_agent" value="1">
-         {% for field in form %}
-            <div>{{ field.label_tag }}{{ field }}{{ field.errors }}</div>
-         {% endfor %}
-         <button type="submit" class="btn">Send Inquiry</button>
-      </form>
    </div>
 </section>
 {% endblock %}

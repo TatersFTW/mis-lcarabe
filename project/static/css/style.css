@@ -1716,6 +1716,112 @@ section {
    color: var(--white);
 }
 
+/* Keep the shared navigation on one tidy line and anchor account actions together. */
+.header .navbar.nav-1 .top-actions,
+.header .navbar.nav-2 .menu > ul,
+.header .navbar.nav-2 .account-menu{
+   display: flex;
+   align-items: center;
+   margin: 0;
+   padding: 0;
+}
+
+.header .navbar.nav-1 .top-actions li,
+.header .navbar.nav-2 .menu > ul > li,
+.header .navbar.nav-2 .account-menu > li{
+   float: none;
+}
+
+.header .navbar.nav-1 .top-actions li a{
+   background: transparent;
+   color: var(--white);
+   white-space: nowrap;
+}
+
+.header .navbar.nav-1 .top-actions li a:hover{
+   background: var(--main-color);
+}
+
+.header .navbar.nav-2 .menu{
+   flex: 1;
+   min-width: 0;
+}
+
+.header .navbar.nav-2 .menu > ul{
+   justify-content: center;
+}
+
+.header .navbar.nav-2 .account-menu{
+   flex: 0 0 auto;
+}
+
+.header .navbar.nav-2 .account-menu > li > ul{
+   right: 0;
+   left: auto;
+   width: max-content;
+   min-width: 24rem;
+   max-width: min(36rem, calc(100vw - 3rem));
+   z-index: 1001;
+   overflow: hidden;
+   border-radius: 0 0 .6rem .6rem;
+   box-shadow: var(--box-shadow);
+}
+
+.header .navbar.nav-2 .account-menu > li:hover > ul li a,
+.header .navbar.nav-2 .account-menu > li:focus-within > ul li a{
+   display: block;
+   width: 100%;
+   padding: 1.2rem 1.6rem;
+   white-space: normal;
+   overflow-wrap: anywhere;
+}
+
+.header .navbar.nav-2 .account-menu > li > ul li{
+   float: none;
+}
+
+.header .navbar.nav-2 .account-menu > li > ul li form{
+   display: none;
+}
+
+.header .navbar.nav-2 .account-menu > li:hover > ul li form,
+.header .navbar.nav-2 .account-menu > li:focus-within > ul li form{
+   display: block;
+}
+
+.nav-logout-form{
+   margin: 0;
+}
+
+.nav-logout-form button{
+   border: 0;
+   font-family: inherit;
+}
+
+@media (max-width: 768px){
+   .header .navbar.nav-2 .flex{
+      gap: 1rem;
+   }
+
+   .header .navbar.nav-2 .menu{
+      flex: 0 0 auto;
+   }
+
+   .header .navbar.nav-2 .account-menu{
+      margin-left: auto;
+   }
+
+   .header .navbar.nav-2 .menu > ul{
+      display: block;
+   }
+}
+
+.header .navbar.nav-2 .account-menu > li > ul li a:hover,
+.header .navbar.nav-2 .account-menu > li > ul li button:hover{
+   background: var(--main-color);
+   color: var(--white);
+}
+
 .dashboard-shell{
    max-width: 1200px;
    margin: 0 auto;
@@ -2135,6 +2241,91 @@ section {
    transform: translateY(-1px);
 }
 
+/* Match the shared property filter to its homepage presentation. */
+#property-search-page{
+   min-height: 100vh;
+   padding: 0 2rem 4rem;
+   background: var(--light-bg);
+}
+
+#property-search-page .search-bar{
+   max-width: 1200px;
+   margin: 0 auto 3rem;
+   padding: 2.2rem;
+   background: var(--white);
+   border: .1rem solid #e1e1e1;
+   border-radius: 1.2rem;
+   box-shadow: var(--box-shadow);
+}
+
+#property-search-page .search-form{
+   display: grid;
+   grid-template-columns: repeat(4, minmax(0, 1fr));
+   align-items: end;
+   gap: 1.6rem;
+}
+
+#property-search-page .search-form .field{
+   min-width: 0;
+   gap: .6rem;
+   color: var(--black);
+   font-size: 1.3rem;
+}
+
+#property-search-page .search-form .field label{
+   margin: 0;
+}
+
+#property-search-page .search-form input,
+#property-search-page .search-form select{
+   min-height: 4.4rem;
+   width: 100%;
+   padding: 1rem 1.2rem;
+   border: .1rem solid #d5d5d5;
+   border-radius: .7rem;
+   background: var(--white);
+   color: var(--black);
+   font-size: 1.4rem;
+}
+
+#property-search-page .search-form input:focus,
+#property-search-page .search-form select:focus{
+   border-color: var(--main-color);
+   box-shadow: 0 0 0 .3rem rgba(11, 79, 27, .12);
+}
+
+#property-search-page .search-form .price-inputs{
+   gap: .8rem;
+}
+
+#property-search-page .search-form .icon-field{
+   grid-column: 1 / -1;
+}
+
+#property-search-page .search-form .icon-field button{
+   min-height: 4.4rem;
+   width: min(100%, 22rem);
+   margin-left: auto;
+   padding: 1rem;
+   border: .1rem solid var(--main-color);
+   border-radius: .7rem;
+   background: var(--main-color);
+   color: var(--white);
+   font-size: 1.6rem;
+   transition: background .2s ease, transform .2s ease;
+}
+
+#property-search-page .search-form .icon-field button:hover{
+   background: var(--black);
+   transform: translateY(-1px);
+}
+
+#property-search-page .search-page{
+   display: block;
+   max-width: 1200px;
+   margin: 0 auto;
+}
+
 #home-page .search-page{
    display: block;
    max-width: 1200px;
@@ -2227,7 +2418,8 @@ section {
 }
 
 @media (max-width: 900px){
-   #home-page .search-form{
+   #home-page .search-form,
+   #property-search-page .search-form{
       grid-template-columns: repeat(2, minmax(0, 1fr));
    }
 }
@@ -2241,7 +2433,351 @@ section {
       grid-template-columns: 1fr;
    }
 
+   #property-search-page .search-form{
+      grid-template-columns: 1fr;
+   }
+
    #home-page .property-card .image-wrapper img{
       height: 20rem;
+   }
+}
+
+/* ===== PROPERTY DETAIL PAGE REFINEMENT ===== */
+#property-detail-page{
+   padding: 3rem 2rem 5rem;
+   background: var(--light-bg);
+}
+
+#property-detail-page .property-page-shell{
+   width: min(100%, 1200px);
+   margin: 0 auto;
+}
+
+#property-detail-page .property-back-link{
+   display: inline-flex;
+   align-items: center;
+   gap: .8rem;
+   margin-bottom: 1.6rem;
+   color: var(--main-color);
+   font-size: 1.5rem;
+   font-weight: 700;
+}
+
+#property-detail-page .property-back-link:hover{
+   text-decoration: underline;
+   text-underline-offset: .3rem;
+}
+
+#property-detail-page .property-overview{
+   grid-template-columns: minmax(0, 1.15fr) minmax(32rem, .85fr);
+   align-items: start;
+   gap: 3.2rem;
+   padding: 2.4rem;
+   border: .1rem solid #e6e6e6;
+   border-radius: 1.2rem;
+   box-shadow: 0 .8rem 2.2rem rgba(0, 0, 0, .08);
+}
+
+#property-detail-page .property-image-section{
+   min-width: 0;
+   gap: 1.2rem;
+}
+
+#property-detail-page .main-image-container{
+   overflow: hidden;
+   min-height: 30rem;
+   border-radius: 1rem;
+   background: var(--light-bg);
+}
+
+#property-detail-page .main-image{
+   height: min(58vw, 54rem);
+   min-height: 30rem;
+   max-height: 54rem;
+   border-radius: 1rem;
+   object-fit: cover;
+}
+
+#property-detail-page .gallery{
+   gap: 1rem;
+}
+
+#property-detail-page .gallery .thumb{
+   width: 8.5rem;
+   height: 7rem;
+   border: .2rem solid transparent;
+   border-radius: .7rem;
+   object-fit: cover;
+}
+
+#property-detail-page .gallery .thumb:hover{
+   border-color: var(--main-color);
+}
+
+#property-detail-page .property-info-section{
+   min-width: 0;
+   padding: .8rem .4rem;
+}
+
+#property-detail-page .property-info-section .status-badge{
+   margin-bottom: 1.2rem;
+   padding: .55rem 1.1rem;
+   font-weight: 700;
+}
+
+#property-detail-page .property-info-section h1{
+   margin-bottom: 1.2rem;
+   font-size: clamp(2.7rem, 3.4vw, 3.8rem);
+   line-height: 1.15;
+   letter-spacing: -.03em;
+   overflow-wrap: anywhere;
+}
+
+#property-detail-page .property-info-section .price{
+   margin-bottom: 1rem;
+   font-size: clamp(2.4rem, 3vw, 3.2rem);
+   font-weight: 700;
+}
+
+#property-detail-page .property-info-section .location{
+   display: flex;
+   align-items: flex-start;
+   gap: .8rem;
+   line-height: 1.5;
+}
+
+#property-detail-page .property-info-section .location i{
+   margin-top: .25rem;
+   color: var(--main-color);
+}
+
+#property-detail-page .features{
+   display: grid;
+   grid-template-columns: repeat(3, minmax(0, 1fr));
+   gap: .8rem;
+   margin: 1.8rem 0 1rem;
+}
+
+#property-detail-page .features span{
+   display: flex;
+   flex-wrap: wrap;
+   align-items: center;
+   justify-content: center;
+   gap: .5rem;
+   padding: 1.1rem .6rem;
+   border: .1rem solid #e6e6e6;
+   border-radius: .8rem;
+   background: #fafafa;
+   color: var(--light-color);
+   font-size: 1.3rem;
+}
+
+#property-detail-page .features i,
+#property-detail-page .area i{
+   color: var(--main-color);
+}
+
+#property-detail-page .features strong{
+   color: var(--black);
+   font-size: 1.5rem;
+}
+
+#property-detail-page .area{
+   display: grid;
+   grid-template-columns: repeat(2, minmax(0, 1fr));
+   gap: .8rem;
+   margin: 0 0 1.8rem;
+}
+
+#property-detail-page .area span{
+   display: flex;
+   flex-wrap: wrap;
+   align-items: center;
+   gap: .6rem;
+   padding: 1rem;
+   border-radius: .8rem;
+   background: var(--light-bg);
+   color: var(--light-color);
+   font-size: 1.25rem;
+}
+
+#property-detail-page .area strong{
+   color: var(--black);
+}
+
+#property-detail-page .property-description{
+   padding-top: 1.7rem;
+   border-top: .1rem solid #e6e6e6;
+}
+
+#property-detail-page .property-description h2{
+   margin-bottom: .7rem;
+   color: var(--black);
+   font-size: 1.8rem;
+}
+
+#property-detail-page .property-description p{
+   margin-bottom: 1rem;
+   color: var(--light-color);
+   font-size: 1.45rem;
+   line-height: 1.7;
+   overflow-wrap: anywhere;
+}
+
+#property-detail-page .property-description .amenities strong{
+   color: var(--black);
+}
+
+#property-detail-page .property-actions:empty{
+   display: none;
+}
+
+#property-detail-page .property-actions form{
+   margin: 1.5rem 0 0;
+}
+
+#property-detail-page .property-actions .inline-btn{
+   display: inline-flex;
+   align-items: center;
+   gap: .8rem;
+   margin: 0;
+   padding: 1.2rem 1.7rem;
+   border: 0;
+   border-radius: .7rem;
+   font-size: 1.5rem;
+   font-weight: 700;
+}
+
+#property-detail-page .contact-agent-panel{
+   grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr);
+   align-items: start;
+   gap: 3rem;
+   margin-top: 2.4rem;
+   padding: 2.6rem;
+   border: .1rem solid #e6e6e6;
+   border-radius: 1.2rem;
+   box-shadow: 0 .8rem 2.2rem rgba(0, 0, 0, .08);
+}
+
+#property-detail-page .agent-summary{
+   padding: 1.2rem 0;
+}
+
+#property-detail-page .agent-summary h2{
+   margin-bottom: 1.4rem;
+   color: var(--black);
+   font-size: 2.6rem;
+}
+
+#property-detail-page .agent-name{
+   margin-bottom: .8rem;
+   color: var(--black);
+   font-size: 1.8rem;
+   font-weight: 700;
+}
+
+#property-detail-page .agent-contact{
+   display: flex;
+   align-items: center;
+   gap: .9rem;
+   margin-top: .8rem;
+   color: var(--light-color);
+   font-size: 1.5rem;
+   overflow-wrap: anywhere;
+}
+
+#property-detail-page .agent-contact i{
+   color: var(--main-color);
+}
+
+#property-detail-page .inquiry-form{
+   gap: 1.2rem;
+}
+
+#property-detail-page .inquiry-form h3{
+   color: var(--black);
+   font-size: 2rem;
+}
+
+#property-detail-page .inquiry-field label{
+   display: block;
+   margin-bottom: .6rem;
+   color: var(--black);
+   font-size: 1.4rem;
+   font-weight: 700;
+}
+
+#property-detail-page .inquiry-field input,
+#property-detail-page .inquiry-field textarea{
+   width: 100%;
+   padding: 1.1rem 1.2rem;
+   border: .1rem solid #d5d5d5;
+   border-radius: .7rem;
+   background: var(--white);
+   color: var(--black);
+   font: inherit;
+   font-size: 1.4rem;
+}
+
+#property-detail-page .inquiry-field input:focus,
+#property-detail-page .inquiry-field textarea:focus{
+   border-color: var(--main-color);
+   outline: 0;
+   box-shadow: 0 0 0 .3rem rgba(11, 79, 27, .12);
+}
+
+#property-detail-page .inquiry-field textarea{
+   min-height: 12rem;
+   resize: vertical;
+}
+
+#property-detail-page .inquiry-form .btn{
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   gap: .8rem;
+   min-height: 4.8rem;
+   margin: .4rem 0 0;
+   border-radius: .7rem;
+   font-size: 1.5rem;
+   font-weight: 700;
+}
+
+@media (max-width: 900px){
+   #property-detail-page .property-overview{
+      grid-template-columns: minmax(0, 1fr) minmax(0, .9fr);
+      gap: 2rem;
+   }
+}
+
+@media (max-width: 700px){
+   #property-detail-page .property-overview,
+   #property-detail-page .contact-agent-panel{
+      grid-template-columns: minmax(0, 1fr);
+   }
+
+   #property-detail-page .main-image{
+      height: 42rem;
+      min-height: 24rem;
+   }
+}
+
+@media (max-width: 480px){
+   #property-detail-page{
+      padding: 2rem 1.4rem 3rem;
+   }
+
+   #property-detail-page .property-overview,
+   #property-detail-page .contact-agent-panel{
+      gap: 1.8rem;
+      padding: 1.6rem;
+   }
+
+   #property-detail-page .features span{
+      flex-direction: column;
+   }
+
+   #property-detail-page .area{
+      grid-template-columns: minmax(0, 1fr);
    }
 }
