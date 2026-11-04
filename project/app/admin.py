@@ -11,6 +11,7 @@
 
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+from .forms import PropertyTourSceneForm
 from .models import (
     CommissionSlip,
     CustomUser,
@@ -18,6 +19,7 @@ from .models import (
     Partner,
     Property,
     PropertyImage,
+    PropertyTourScene,
     PropertyInquiry,
     Review,
     Seminar,
@@ -42,8 +44,19 @@ class CustomUserAdmin(UserAdmin):
 # Register the custom user model with its tailored admin class.
 admin.site.register(CustomUser, CustomUserAdmin)
 # Register the remaining models with Django's default admin screens.
-admin.site.register(Property)
+class PropertyTourSceneInline(admin.TabularInline):
+    model = PropertyTourScene
+    form = PropertyTourSceneForm
+    extra = 0
+
+
+@admin.register(Property)
+class PropertyAdmin(admin.ModelAdmin):
+    inlines = [PropertyTourSceneInline]
+
+
 admin.site.register(PropertyImage)
+admin.site.register(PropertyTourScene)
 admin.site.register(Review)
 admin.site.register(FavoriteProperty)
 admin.site.register(PropertyInquiry)

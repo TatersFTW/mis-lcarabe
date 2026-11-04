@@ -39,10 +39,12 @@ from .views import (
     contact_view,
     dashboard_redirect,
     delete_property,
+    edit_property_tour_scene,
     edit_property,
     export_commissions,
     home,
     login_view,
+    manage_property_tour,
     partnerships,
     property_detail,
     register_seminar,
@@ -73,6 +75,8 @@ urlpatterns = [
     path('broker_dashboard/', BrokerDashboardView.as_view(), name='broker_dashboard'),
     path('broker/agents/', ManageAgentsView.as_view(), name='manage_agents'),
     path('broker/properties/', ManagepropertiesView.as_view(), name='manage_properties'),
+    path('broker/properties/<int:id>/tour/', manage_property_tour, name='manage_property_tour'),
+    path('broker/properties/<int:id>/tour/<int:scene_id>/edit/', edit_property_tour_scene, name='edit_property_tour_scene'),
 
     # --- Agent pages ---
     path('agent/agents/', agents, name='agents'),                  # Public agent directory.

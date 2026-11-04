@@ -23,6 +23,7 @@
          <p>Manage agents, monitor properties, publish seminars, and release commissions.</p>
       </div>
       <div class="dashboard-actions">
+         <a href="{% url 'manage_properties' %}" class="inline-btn"><i class="fas fa-house" aria-hidden="true"></i> Manage Properties</a>
          <a href="{% url 'manage_agents' %}" class="inline-btn"><i class="fas fa-users"></i> Agents</a>
          <a href="{% url 'commission_create' %}" class="inline-btn"><i class="fas fa-file-circle-plus"></i> Commission</a>
          <a href="{% url 'seminar_create' %}" class="inline-btn"><i class="fas fa-plus"></i> Seminar</a>
