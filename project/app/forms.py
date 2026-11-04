@@ -213,7 +213,12 @@ class PropertyTourSceneForm(forms.ModelForm):
         if image and image.size > 30 * 1024 * 1024:
             raise forms.ValidationError('Tour images must be 30 MB or smaller.')
         if image and self.cleaned_data.get('scene_type') == 'panorama':
-            width, height = image.image.size
+            # New uploads are wrapped with a Pillow image by ImageField, while
+            # an unchanged saved image is an ImageFieldFile with width/height.
+            if hasattr(image, 'image'):
+                width, height = image.image.size
+            else:
+                width, height = image.width, image.height
             ratio = width / height if height else 0
             if not 1.8 <= ratio <= 2.2:
                 raise forms.ValidationError('A 360 panorama should be equirectangular and close to a 2:1 width-to-height ratio. Choose Regular photo for other images.')
