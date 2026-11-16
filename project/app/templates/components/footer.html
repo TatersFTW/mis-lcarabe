@@ -12,58 +12,50 @@
 {% load static %}
 
 <!-- FOOTER -->
- <link rel="stylesheet" href="{% static 'css/style.css' %}?v=detail-20261019-1">
-
 <footer class="footer">
-        <div class="footer-container">
+   <div class="footer-container">
+      <div class="footer-main">
+         <section class="footer-section footer-brand" aria-labelledby="footer-brand-title">
+            <a href="{% url 'home' %}" class="footer-brand-link">
+               <img src="{% static 'images/logo.png' %}" alt="">
+               <span id="footer-brand-title">L. C. Arabe Realty</span>
+            </a>
+            <p class="footer-tagline">A trusted local partner for your next move.</p>
+            <a class="footer-social-link" href="https://www.facebook.com/profile.php?id=100064045423114" target="_blank" rel="noopener noreferrer">
+               <i class="fab fa-facebook-f" aria-hidden="true"></i> Follow us on Facebook
+            </a>
+         </section>
 
-            <!-- LEFT -->
-            <div class="footer-section">
-                <h2 class="logo">L. C. Arabe Realty</h2>
+         <nav class="footer-section footer-navigation" aria-labelledby="footer-navigation-title">
+            <h2 class="footer-heading" id="footer-navigation-title">Explore</h2>
+            <ul class="footer-links">
+               <li><a href="#"><i class="fas fa-house" aria-hidden="true"></i> Buy a Home</a></li>
+               <li><a href="#"><i class="fas fa-building" aria-hidden="true"></i> Sell Your Property</a></li>
+               <li><a href="#"><i class="fas fa-chart-line" aria-hidden="true"></i> Market Analysis</a></li>
+               <li><a href="{% url 'agents' %}"><i class="fas fa-users" aria-hidden="true"></i> Our Agents</a></li>
+               <li><a href="#"><i class="fas fa-newspaper" aria-hidden="true"></i> Blog &amp; Resources</a></li>
+               <li><a href="{% url 'contact' %}"><i class="fas fa-comment-dots" aria-hidden="true"></i> Contact Us</a></li>
+            </ul>
+         </nav>
 
-                <p class="follow">📍 <strong>Follow Us:</strong></p>
-                <p class="social-links">
-                    <a href="https://www.facebook.com/profile.php?id=100064045423114" target="_blank" rel="noopener noreferrer">Facebook</a> 
+         <section class="footer-section footer-contact" aria-labelledby="footer-contact-title">
+            <h2 class="footer-heading" id="footer-contact-title">Get in touch</h2>
+            <address class="footer-contact-list">
+               <p><i class="fas fa-location-dot" aria-hidden="true"></i><span>Molino IV, City of Bacoor, Cavite (4102)</span></p>
+               <p><i class="fas fa-phone" aria-hidden="true"></i><span>0932-391-4987 <span class="footer-contact-separator">·</span> 0939-859-4321</span></p>
+               <p><i class="fas fa-envelope" aria-hidden="true"></i><a href="mailto:lcaraberealty@gmail.com">lcaraberealty@gmail.com</a></p>
+               <p><i class="fas fa-globe" aria-hidden="true"></i><span>www.yourrealestate.com</span></p>
+            </address>
+         </section>
+      </div>
 
-                </p>
-
-                <p class="actions">
-                    🔷 <a href="#">Schedule a Call</a> |
-                    📍 <a href="#">Find a Property</a>
-                </p>
-            </div>
-
-            <!-- MIDDLE -->
-            <div class="footer-section">
-                <ul class="footer-links">
-                    <li>🏠 <a href="#">Buy a Home</a></li>
-                    <li>🏢 <a href="#">Sell Your Property</a></li>
-                    <li>📊 <a href="#">Market Analysis</a></li>
-                    <li>👥 <a href="{% url 'agents' %}">Our Agents</a></li>
-                    <li>📰 <a href="#">Blog & Resources</a></li>
-                    <li>📞 <a href="{% url 'contact' %}">Contact Us</a></li>
-                </ul>
-            </div>
-
-            <!-- RIGHT -->
-            <div class="footer-section">
-                <p>📍 Office Address: Molino IV, City of Bacoor Cavite (4102)</p>
-                <p>📞 Phone: 0932-391-4987 | 0939-859-4321</p>
-                <p>✉️ Email: lcaraberealty@gmail.com</p>
-                <p>🌐 Website: www.yourrealestate.com</p>
-            </div>
-
-        </div>
-
-        <hr>
-
-        <!-- BOTTOM -->
-        <div class="footer-bottom">
-            <p>
-                © <span id="year"></span> <strong>L. C. Arabe Realty</strong>. All rights reserved.
-                🔷 <a href="#">Privacy Policy</a>
-                🔷 <a href="#">Terms & Conditions</a>
-                🔷 <a href="#">Disclaimer</a>
-            </p>
-        </div>
-    </footer>
+      <div class="footer-bottom">
+         <p class="footer-copyright">© <span id="year"></span> <strong>L. C. Arabe Realty</strong>. All rights reserved.</p>
+         <nav class="footer-legal" aria-label="Legal information">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms &amp; Conditions</a>
+            <a href="#">Disclaimer</a>
+         </nav>
+      </div>
+   </div>
+</footer>

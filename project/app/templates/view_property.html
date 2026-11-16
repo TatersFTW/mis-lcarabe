@@ -102,7 +102,11 @@
             {% if property.agent.phone %}<a href="tel:{{ property.agent.phone }}" class="agent-contact"><i class="fas fa-phone" aria-hidden="true"></i> {{ property.agent.phone }}</a>{% endif %}
          </div>
          <form method="post" class="compact-form inquiry-form">
-            <h3>Send an inquiry</h3>
+            <div class="inquiry-form-heading">
+               <span class="eyebrow">We’re here to help</span>
+               <h3>Send an inquiry</h3>
+               <p>Share a few details and the agent can get back to you about this property.</p>
+            </div>
             {% csrf_token %}
             {# Hidden flag tells the view this is a "contact agent" submission. #}
             <input type="hidden" name="contact_agent" value="1">
