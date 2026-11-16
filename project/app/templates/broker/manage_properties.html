@@ -50,7 +50,7 @@
                      <td>{{ property.city }}, {{ property.province }}</td>
                      <td>PHP {{ property.price|floatformat:2 }}</td>
                      <td><span class="status-pill {% if property.status_label == 'Sold' %}sold{% else %}active{% endif %}">{{ property.status_label }}</span></td>
-                     <td><a href="{% url 'property_detail' property.id %}">View</a></td>
+                     <td><a href="{% url 'property_detail' property.id %}">View</a> · <a href="{% url 'manage_property_tour' property.id %}">Manage tour</a></td>
                   </tr>
                {% empty %}
                   <tr><td colspan="6">No matching properties.</td></tr>

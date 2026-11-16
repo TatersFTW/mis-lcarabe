@@ -16,6 +16,8 @@
 # --- Imports -----------------------------------------------------------------
 # models: base ORM classes (Model, fields like CharField/ForeignKey, validators).
 from django.db import models
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
 # AbstractUser: Django's built-in user (username, password, email, is_staff...).
 # We extend it below instead of reinventing authentication from scratch.
 from django.contrib.auth.models import AbstractUser
@@ -159,6 +161,32 @@ class PropertyImage(models.Model):
 
     def __str__(self):
         return f"Image for {self.property.title}"
+
+
+class PropertyTourScene(models.Model):
+    """A photo or 360 panorama scene in a property's buyer-facing tour."""
+    SCENE_TYPES = [('panorama', '360 panorama'), ('photo', 'Regular photo')]
+
+    property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='tour_scenes')
+    title = models.CharField(max_length=120, help_text='For example: Living room or Main entrance')
+    image = models.ImageField(upload_to='property_tours/')
+    scene_type = models.CharField(max_length=12, choices=SCENE_TYPES, default='panorama')
+    caption = models.CharField(max_length=240, blank=True)
+    sort_order = models.PositiveIntegerField(default=0, help_text='Lower numbers appear first.')
+
+    class Meta:
+        ordering = ['sort_order', 'id']
+
+    def __str__(self):
+        return f'{self.property.title} — {self.title}'
+
+
+@receiver(post_delete, sender=PropertyTourScene)
+def remove_property_tour_scene_image(sender, instance, **kwargs):
+    """Remove a scene's stored image after deletion, unless another scene uses it."""
+    image_name = instance.image.name
+    if image_name and not sender.objects.filter(image=image_name).exists():
+        instance.image.storage.delete(image_name)
     
 class Review(models.Model):
     """A client testimonial shown on the About page.

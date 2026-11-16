@@ -22,7 +22,7 @@
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
 
    <!-- custom css -->
-   <link rel="stylesheet" href="{% static 'css/style.css' %}?v=detail-20261019-1">
+   <link rel="stylesheet" href="{% static 'css/style.css' %}?v=faq-refresh-20261113-2">
 </head>
 
 <body>
@@ -60,43 +60,45 @@
 
 <!-- faq section starts -->
 <section class="faq" id="faq">
-
-   <h1 class="heading">FAQ</h1>
-
-   <div class="box-container">
-
-      <div class="box active">
-         <h3><span>What is the process of buying a property?</span><i class="fas fa-angle-down"></i></h3>
-         <p>Buying a property typically involves determining your budget, getting pre-approved for a loan, searching for properties, making an offer, conducting inspections, and closing the deal with legal documentation.</p>
+   <div class="faq-shell">
+      <div class="faq-intro">
+         <span class="faq-eyebrow">Helpful information</span>
+         <h1 class="heading">Frequently asked questions</h1>
+         <p>Quick answers to common questions about buying and evaluating a property.</p>
       </div>
 
-      <div class="box active">
-         <h3><span>How much should I budget for a down payment?</span><i class="fas fa-angle-down"></i></h3>
-         <p>Most buyers pay between 10% to 20% of the property price as a down payment. However, this can vary depending on the loan type and location.</p>
-      </div>
+      <div class="box-container">
+         <article class="box">
+            <h3><button class="faq-question" id="faq-question-1" type="button" aria-expanded="false" aria-controls="faq-answer-1"><span>What is the process of buying a property?</span><i class="fas fa-chevron-down" aria-hidden="true"></i></button></h3>
+            <p id="faq-answer-1" role="region" aria-labelledby="faq-question-1">Buying a property typically involves determining your budget, getting pre-approved for a loan, searching for properties, making an offer, conducting inspections, and closing the deal with legal documentation.</p>
+         </article>
 
-      <div class="box">
-         <h3><span>What are the additional costs when purchasing a property?</span><i class="fas fa-angle-down"></i></h3>
-         <p>Aside from the property price, you should expect costs like taxes, legal fees, registration fees, insurance, and maintenance expenses.</p>
-      </div>
+         <article class="box">
+            <h3><button class="faq-question" id="faq-question-2" type="button" aria-expanded="false" aria-controls="faq-answer-2"><span>How much should I budget for a down payment?</span><i class="fas fa-chevron-down" aria-hidden="true"></i></button></h3>
+            <p id="faq-answer-2" role="region" aria-labelledby="faq-question-2">Most buyers pay between 10% to 20% of the property price as a down payment. However, this can vary depending on the loan type and location.</p>
+         </article>
 
-      <div class="box">
-         <h3><span>How do I know if a property is a good investment?</span><i class="fas fa-angle-down"></i></h3>
-         <p>A good property investment depends on location, market trends, potential rental income, infrastructure development, and long-term value appreciation.</p>
-      </div>
+         <article class="box">
+            <h3><button class="faq-question" id="faq-question-3" type="button" aria-expanded="false" aria-controls="faq-answer-3"><span>What are the additional costs when purchasing a property?</span><i class="fas fa-chevron-down" aria-hidden="true"></i></button></h3>
+            <p id="faq-answer-3" role="region" aria-labelledby="faq-question-3">Aside from the property price, you should expect costs like taxes, legal fees, registration fees, insurance, and maintenance expenses.</p>
+         </article>
 
-      <div class="box">
-         <h3><span>Can foreigners buy property in the Philippines?</span><i class="fas fa-angle-down"></i></h3>
-         <p>Foreigners can legally own condominium units but cannot own land. They can, however, lease land long-term or invest through corporations with Filipino ownership requirements.</p>
-      </div>
+         <article class="box">
+            <h3><button class="faq-question" id="faq-question-4" type="button" aria-expanded="false" aria-controls="faq-answer-4"><span>How do I know if a property is a good investment?</span><i class="fas fa-chevron-down" aria-hidden="true"></i></button></h3>
+            <p id="faq-answer-4" role="region" aria-labelledby="faq-question-4">A good property investment depends on location, market trends, potential rental income, infrastructure development, and long-term value appreciation.</p>
+         </article>
 
+         <article class="box">
+            <h3><button class="faq-question" id="faq-question-5" type="button" aria-expanded="false" aria-controls="faq-answer-5"><span>Can foreigners buy property in the Philippines?</span><i class="fas fa-chevron-down" aria-hidden="true"></i></button></h3>
+            <p id="faq-answer-5" role="region" aria-labelledby="faq-question-5">Foreigners can legally own condominium units but cannot own land. They can, however, lease land long-term or invest through corporations with Filipino ownership requirements.</p>
+         </article>
+      </div>
    </div>
-
 </section>
 <!-- faq section ends -->
 
 <!-- custom js -->
-<script src="{% static 'js/script.js' %}"></script>
+<script src="{% static 'js/script.js' %}?v=faq-accessible-20261113-1"></script>
 
 </body>
 </html>

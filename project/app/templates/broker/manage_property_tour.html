@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}Manage property tour | L. C. Arabe Realty{% endblock %}
+{% block content %}
+<section class="dashboard-shell tour-manage-page">
+  <a href="{% url 'manage_properties' %}" class="property-back-link">← Back to properties</a>
+  <div class="dashboard-header"><div><span class="eyebrow">Broker tools</span><h1>Property tour</h1><p>{{ property.title }} · {{ property.city }}</p></div></div>
+  <div class="tour-manage-grid">
+    <section class="panel tour-upload-panel">
+      <div class="tour-upload-title"><span class="tour-upload-icon"><i class="{% if editing_scene %}fas fa-pen-to-square{% else %}fas fa-panorama{% endif %}" aria-hidden="true"></i></span><div><span class="eyebrow">Tour builder</span><h2>{% if editing_scene %}Edit scene{% else %}Add a tour scene{% endif %}</h2><p>{% if editing_scene %}Change this scene's image or details.{% else %}Upload a 360 panorama or a regular property photo.{% endif %}</p></div></div>
+      <form method="post" enctype="multipart/form-data" class="tour-scene-form">
+        {% csrf_token %}
+        <div class="tour-form-grid">
+        {% for field in form %}
+          <div class="tour-form-field tour-field-{{ field.name }}{% if field.name == 'caption' %} tour-field-wide{% endif %}">
+            <label for="{{ field.id_for_label }}">{% if field.name == 'image' and editing_scene %}Replace image{% else %}{{ field.label }}{% endif %}{% if field.field.required %}<span class="tour-required">*</span>{% endif %}</label>
+            {% if field.name == 'image' %}{% if editing_scene %}<div class="tour-current-image"><img src="{{ editing_scene.image.url }}" alt="Current image for {{ editing_scene.title }}"><span>Current image</span></div>{% endif %}<div class="tour-file-upload"><i class="fas fa-cloud-arrow-up" aria-hidden="true"></i><strong>{% if editing_scene %}Choose a replacement image{% else %}Choose an image to upload{% endif %}</strong><span>JPG, PNG, or WebP · up to 30 MB</span>{{ field }}</div>
+            {% else %}{{ field }}{% endif %}
+            {% if field.help_text %}<small class="tour-field-help">{{ field.help_text }}</small>{% endif %}
+            {% if field.errors %}<div class="tour-field-errors">{{ field.errors }}</div>{% endif %}
+          </div>
+        {% endfor %}
+        </div>
+        <div class="tour-form-footer"><span><i class="fas fa-circle-info" aria-hidden="true"></i> {% if editing_scene %}Leave the image blank to keep the current one.{% else %}A full 360 panorama works best at a 2:1 ratio.{% endif %}</span><div class="tour-form-actions"><button type="submit" class="btn"><i class="{% if editing_scene %}fas fa-check{% else %}fas fa-plus{% endif %}" aria-hidden="true"></i> {% if editing_scene %}Save changes{% else %}Add scene{% endif %}</button>{% if editing_scene %}<a href="{% url 'manage_property_tour' property.id %}" class="tour-cancel-btn">Cancel</a>{% endif %}</div></div>
+      </form>
+    </section>
+    <section class="panel tour-scenes-panel">
+      <h2>Scenes <span>{{ scenes|length }}</span></h2>
+      {% for scene in scenes %}
+        <article class="tour-scene-row">
+          <img src="{{ scene.image.url }}" alt="">
+          <div class="tour-scene-row-info"><strong>{{ scene.title }}</strong><span>{{ scene.get_scene_type_display }} · Order {{ scene.sort_order }}</span>{% if scene.caption %}<small>{{ scene.caption }}</small>{% endif %}</div>
+          <div class="tour-scene-actions"><a class="tour-edit-btn" href="{% url 'edit_property_tour_scene' property.id scene.id %}" aria-label="Edit {{ scene.title }}"><i class="fas fa-pen" aria-hidden="true"></i> Edit</a><form method="post" onsubmit="return confirm('Remove this scene from the tour?');">{% csrf_token %}<input type="hidden" name="delete_scene" value="{{ scene.id }}"><button type="submit" class="tour-delete-btn">Remove</button></form></div>
+        </article>
+      {% empty %}<p class="tour-empty">No tour scenes yet. Add the first scene using the form.</p>{% endfor %}
+      <a href="{% url 'property_detail' property.id %}" class="inline-btn tour-preview-link">Preview buyer page</a>
+    </section>
+  </div>
+</section>
+{% endblock %}

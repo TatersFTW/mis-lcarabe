@@ -113,11 +113,14 @@ if(mainImage && thumbnails.length > 0){
 // =========================
 // FAQ TOGGLE
 // =========================
-// Clicking an FAQ question toggles the 'active' class on its box to show/hide
-// the answer (an accordion).
-document.querySelectorAll('.faq .box-container .box h3').forEach(head => {
-   head.addEventListener("click", () => {
-      head.parentElement.classList.toggle('active');
+// Clicking or keyboard-activating a FAQ button toggles the answer and keeps
+// its accessible expanded state in sync with the visible panel.
+document.querySelectorAll('.faq .box-container .box .faq-question').forEach(button => {
+   button.addEventListener("click", () => {
+      const item = button.closest('.box');
+      const isExpanded = button.getAttribute('aria-expanded') === 'true';
+      item.classList.toggle('active', !isExpanded);
+      button.setAttribute('aria-expanded', String(!isExpanded));
    });
 });
 

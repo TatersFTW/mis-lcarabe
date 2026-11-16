@@ -34,6 +34,7 @@ from .forms import (
     CustomUserCreationForm,
     PropertyForm,
     PropertyInquiryForm,
+    PropertyTourSceneForm,
     SeminarForm,
 )
 from .models import (
@@ -44,6 +45,7 @@ from .models import (
     Property,
     PropertyImage,
     PropertyInquiry,
+    PropertyTourScene,
     Review,
     Seminar,
     SeminarRegistration,
@@ -297,6 +299,50 @@ class ManagepropertiesView(LoginRequiredMixin, RoleRequiredMixin, ListView):
         return context
 
 
+@role_required('broker')
+def manage_property_tour(request, id):
+    property_instance = get_object_or_404(Property, id=id, is_deleted=False)
+    if request.method == 'POST' and request.POST.get('delete_scene'):
+        scene = get_object_or_404(PropertyTourScene, id=request.POST['delete_scene'], property=property_instance)
+        scene.delete()
+        messages.success(request, 'Tour scene removed.')
+        return redirect('manage_property_tour', id=id)
+
+    form = PropertyTourSceneForm(request.POST or None, request.FILES or None)
+    if request.method == 'POST' and form.is_valid():
+        scene = form.save(commit=False)
+        scene.property = property_instance
+        scene.save()
+        messages.success(request, 'Tour scene added to this property.')
+        return redirect('manage_property_tour', id=id)
+    return render(request, 'broker/manage_property_tour.html', {
+        'property': property_instance,
+        'form': form,
+        'scenes': property_instance.tour_scenes.all(),
+    })
+
+
+@role_required('broker')
+def edit_property_tour_scene(request, id, scene_id):
+    property_instance = get_object_or_404(Property, id=id, is_deleted=False)
+    scene = get_object_or_404(PropertyTourScene, id=scene_id, property=property_instance)
+    form = PropertyTourSceneForm(request.POST or None, request.FILES or None, instance=scene)
+    if request.method == 'POST' and form.is_valid():
+        old_image_name = scene.image.name
+        image_storage = scene.image.storage
+        scene = form.save()
+        if old_image_name and old_image_name != scene.image.name and not PropertyTourScene.objects.filter(image=old_image_name).exists():
+            image_storage.delete(old_image_name)
+        messages.success(request, 'Tour scene updated.')
+        return redirect('manage_property_tour', id=id)
+    return render(request, 'broker/manage_property_tour.html', {
+        'property': property_instance,
+        'form': form,
+        'scenes': property_instance.tour_scenes.all(),
+        'editing_scene': scene,
+    })
+
+
 @role_required('agent')
 def agent_dashboard_view(request):
     """The agent's dashboard (agent role only).
@@ -468,7 +514,7 @@ def property_detail(request, id):
             in), show a confirmation, and redirect back to the same page.
     Also passes is_favorite so the template can show Save/Remove Favorite.
     """
-    property_instance = get_object_or_404(Property, id=id, is_deleted=False)
+    property_instance = get_object_or_404(Property.objects.prefetch_related('tour_scenes'), id=id, is_deleted=False)
     # Pre-fill the inquiry form for logged-in users; empty for guests.
     form = PropertyInquiryForm(request.POST or None, initial={
         'name': request.user.get_full_name() if request.user.is_authenticated else '',

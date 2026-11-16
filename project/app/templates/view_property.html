@@ -12,6 +12,9 @@
    ============================================================================= {% endcomment %}
 
 {% block title %}{{ property.title }} | L. C. Arabe Realty{% endblock %}
+{% block extra_css %}
+{% if property.tour_scenes.all %}<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css">{% endif %}
+{% endblock %}
 
 {% block content %}
 <section class="property-details" id="property-detail-page">
@@ -71,6 +74,25 @@
          </div>
       </div>
 
+      {% if property.tour_scenes.all %}
+      <section class="property-tour" aria-labelledby="property-tour-title" data-tour>
+         <div class="property-tour-heading"><div><span class="eyebrow">Explore at your pace</span><h2 id="property-tour-title">Property tour</h2><p>Move through the rooms using the scene controls. Drag a 360 view to look around.</p></div><span class="tour-count">{{ property.tour_scenes.count }} scene{{ property.tour_scenes.count|pluralize }}</span></div>
+         <div class="tour-stage">
+            {% for scene in property.tour_scenes.all %}
+            <div class="tour-frame{% if forloop.first %} is-active{% endif %}" data-tour-frame data-scene-type="{{ scene.scene_type }}" data-index="{{ forloop.counter0 }}" {% if not forloop.first %}hidden{% endif %}>
+               {% if scene.scene_type == 'panorama' %}
+                  <div class="tour-panorama" id="tour-panorama-{{ scene.id }}" data-panorama-url="{{ scene.image.url }}" aria-label="360 panorama: {{ scene.title }}"></div>
+               {% else %}
+                  <img class="tour-photo" src="{{ scene.image.url }}" alt="{{ scene.title }}">
+               {% endif %}
+               <div class="tour-caption"><strong>{{ scene.title }}</strong>{% if scene.caption %}<span>{{ scene.caption }}</span>{% endif %}<small>{% if scene.scene_type == 'panorama' %}360 view{% else %}Photo{% endif %}</small></div>
+            </div>
+            {% endfor %}
+         </div>
+         <div class="tour-controls"><button class="tour-nav-btn" type="button" data-tour-prev aria-label="Previous scene"><i class="fas fa-arrow-left" aria-hidden="true"></i> Previous</button><div class="tour-dots" role="group" aria-label="Choose a tour scene">{% for scene in property.tour_scenes.all %}<button type="button" class="tour-dot{% if forloop.first %} is-active{% endif %}" data-tour-select="{{ forloop.counter0 }}" aria-label="Go to {{ scene.title }}" aria-current="{% if forloop.first %}true{% else %}false{% endif %}">{{ forloop.counter }}</button>{% endfor %}</div><button class="tour-nav-btn" type="button" data-tour-next>Next <i class="fas fa-arrow-right" aria-hidden="true"></i></button></div>
+      </section>
+      {% endif %}
+
       <div class="details-container contact-agent-panel">
          <div class="agent-summary">
             <span class="eyebrow">Questions or ready to visit?</span>
@@ -80,7 +102,11 @@
             {% if property.agent.phone %}<a href="tel:{{ property.agent.phone }}" class="agent-contact"><i class="fas fa-phone" aria-hidden="true"></i> {{ property.agent.phone }}</a>{% endif %}
          </div>
          <form method="post" class="compact-form inquiry-form">
-            <h3>Send an inquiry</h3>
+            <div class="inquiry-form-heading">
+               <span class="eyebrow">We’re here to help</span>
+               <h3>Send an inquiry</h3>
+               <p>Share a few details and the agent can get back to you about this property.</p>
+            </div>
             {% csrf_token %}
             {# Hidden flag tells the view this is a "contact agent" submission. #}
             <input type="hidden" name="contact_agent" value="1">
@@ -92,4 +118,60 @@
       </div>
    </div>
 </section>
+{% endblock %}
+{% block extra_js %}
+{% if property.tour_scenes.all %}
+<script src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
+<script>
+(() => {
+   const tour = document.querySelector('[data-tour]');
+   if (!tour) return;
+   const frames = [...tour.querySelectorAll('[data-tour-frame]')];
+   const dots = [...tour.querySelectorAll('[data-tour-select]')];
+   let current = 0;
+   const viewers = new Map();
+   function show(index) {
+      current = (index + frames.length) % frames.length;
+      frames.forEach((frame, i) => {
+         frame.hidden = i !== current;
+         frame.classList.toggle('is-active', i === current);
+      });
+      dots.forEach((dot, i) => {
+         dot.classList.toggle('is-active', i === current);
+         dot.setAttribute('aria-current', i === current ? 'true' : 'false');
+      });
+      const panorama = frames[current].querySelector('[data-panorama-url]');
+      if (panorama) {
+         const id = panorama.id;
+         if (!window.pannellum) {
+            if (!panorama.querySelector('img')) {
+               const fallback = document.createElement('img');
+               fallback.src = panorama.dataset.panoramaUrl;
+               fallback.alt = panorama.getAttribute('aria-label');
+               fallback.className = 'tour-photo';
+               panorama.appendChild(fallback);
+            }
+         } else if (!viewers.has(id)) {
+            try { viewers.set(id, window.pannellum.viewer(id, {type: 'equirectangular', panorama: panorama.dataset.panoramaUrl, autoLoad: true, showControls: true, compass: false})); }
+            catch (error) {
+               const message = document.createElement('p');
+               message.className = 'tour-viewer-error';
+               message.textContent = 'This panorama could not be displayed. Open the image directly.';
+               const link = document.createElement('a');
+               link.href = panorama.dataset.panoramaUrl;
+               link.target = '_blank';
+               link.rel = 'noopener';
+               link.textContent = 'Open panorama image';
+               panorama.append(message, link);
+            }
+         } else { viewers.get(id).resize(); }
+      }
+   }
+   tour.querySelector('[data-tour-prev]').addEventListener('click', () => show(current - 1));
+   tour.querySelector('[data-tour-next]').addEventListener('click', () => show(current + 1));
+   dots.forEach(dot => dot.addEventListener('click', () => show(Number(dot.dataset.tourSelect))));
+   show(0);
+})();
+</script>
+{% endif %}
 {% endblock %}

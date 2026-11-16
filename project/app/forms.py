@@ -23,6 +23,7 @@ from .models import (
     CustomUser,
     Property,
     PropertyInquiry,
+    PropertyTourScene,
     Seminar,
 )
 
@@ -186,6 +187,42 @@ class PropertyInquiryForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
             apply_form_control(field)
+
+
+class PropertyTourSceneForm(forms.ModelForm):
+    class Meta:
+        model = PropertyTourScene
+        fields = ['title', 'scene_type', 'image', 'caption', 'sort_order']
+        widgets = {
+            'caption': forms.Textarea(attrs={'rows': 2}),
+            'sort_order': forms.NumberInput(attrs={'min': 0}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance and self.instance.pk:
+            self.fields['image'].required = False
+            self.fields['image'].help_text = 'Choose a replacement image, or leave this blank to keep the current image. 360 panoramas should be equirectangular (ideally 2:1).'
+        else:
+            self.fields['image'].help_text = 'Use a 360 equirectangular panorama (ideally 2:1) for a 360 scene, or a normal photo.'
+        for field in self.fields.values():
+            apply_form_control(field)
+
+    def clean_image(self):
+        image = self.cleaned_data.get('image')
+        if image and image.size > 30 * 1024 * 1024:
+            raise forms.ValidationError('Tour images must be 30 MB or smaller.')
+        if image and self.cleaned_data.get('scene_type') == 'panorama':
+            # New uploads are wrapped with a Pillow image by ImageField, while
+            # an unchanged saved image is an ImageFieldFile with width/height.
+            if hasattr(image, 'image'):
+                width, height = image.image.size
+            else:
+                width, height = image.width, image.height
+            ratio = width / height if height else 0
+            if not 1.8 <= ratio <= 2.2:
+                raise forms.ValidationError('A 360 panorama should be equirectangular and close to a 2:1 width-to-height ratio. Choose Regular photo for other images.')
+        return image
 
 
 class SeminarForm(forms.ModelForm):
